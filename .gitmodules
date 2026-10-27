@@ -15,4 +15,4 @@
 	url = git@github.com:social-navigation-group/sbpd-dataset-pipeline.git
 [submodule "third_party/ERASOR2"]
 	path = third_party/ERASOR2
-	url = git@github.com:raoshashank/ERASOR2.git
+	url = git@github.com:raoshashank/ERASOR2_minimal.git

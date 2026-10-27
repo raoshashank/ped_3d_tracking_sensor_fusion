@@ -44,7 +44,7 @@ bag (.db3)
 
 | submodule | upstream | pinned | role | local changes |
 |---|---|---|---|---|
-| `third_party/ERASOR2` | github.com/url-kaist/ERASOR2 (fork at `raoshashank/ERASOR2`, see setup) | `d43d94f` | dynamic-object removal; builds `run_erasor2` | heavily modified: ROS-free, catkin-free, yaml-cpp config, rerun.io viewer, `erasor1` fixes; history squashed to one commit |
+| `third_party/ERASOR2` | github.com/url-kaist/ERASOR2 (fork at `raoshashank/ERASOR2_minimal`, see setup) | `d43d94f` | dynamic-object removal; builds `run_erasor2` | heavily modified: ROS-free, catkin-free, yaml-cpp config, rerun.io viewer, `erasor1` fixes; history squashed to one commit |
 | `third_party/vggt-omega` | github.com/facebookresearch/vggt-omega | `282ec70` | metric multi-view depth (`vggt_omega` package, weights from HF `facebook/VGGT-Omega`) | none |
 | `third_party/regroup-hri` | github.com/UCSD-RHC-Lab/regroup-hri | `f692f50` | 2D person tracking + grouping | `regroup/regroup-hri_local_changes.patch` + files in `regroup/added/` |
 | `third_party/ros2_leg_detector` | github.com/mowito/ros2_leg_detector | `b4be35a` | baseline only | `baselines/leg_detector/ros2_leg_detector_humble.patch` |
@@ -62,13 +62,12 @@ git clone --recurse-submodules <this repo>
 cd ped_3d_tracking_sensor_fusion
 ```
 
-ERASOR2 submodule: `.gitmodules` points at `git@github.com:raoshashank/ERASOR2.git`, which has to be
-created once from the modified checkout (`~/ERASOR2`, whose `origin` still names the upstream repo):
+ERASOR2 submodule: `.gitmodules` points at `git@github.com:raoshashank/ERASOR2_minimal.git`, the
+modified fork (pushed from the workstation checkout `~/ERASOR2`, remote `fork`; its `origin` still
+names the upstream repo). Build it once:
 
 ```bash
-# create an empty repo raoshashank/ERASOR2 on GitHub, then
-cd ~/ERASOR2 && git remote add fork git@github.com:raoshashank/ERASOR2.git && git push fork main
-cd <this repo> && git submodule update --init third_party/ERASOR2
+git submodule update --init third_party/ERASOR2
 cd third_party/ERASOR2 && cmake -B build -S . && cmake --build build -j
 ```
 

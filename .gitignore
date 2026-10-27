@@ -1,0 +1,21 @@
+# caches / logs
+__pycache__/
+*.pyc
+*.log
+.ipynb_checkpoints/
+logs/
+backup_failed_slam/
+figures/blog_scripts/_blur_cache/
+pipeline/groups_eval/sheets/
+# data products and model weights (live next to the bags, not in git)
+*.png
+*.pdf
+*.gif
+*.mp4
+*.pcd
+*.npz
+*.pkl
+*.pt
+*.rrd
+*.bin
+*.db3

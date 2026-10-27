@@ -1,0 +1,14 @@
+.git
+**/__pycache__
+**/*.pyc
+**/*.pyo
+
+# Videos (large, not needed in the image)
+images/
+
+# Root-level model weight (regroup/yolo11x.pt is the one that gets copied)
+/yolo11n.pt
+
+# Dev-only files
+regroup/regroup_notebook.ipynb
+regroup/tools/

@@ -1,0 +1,7 @@
+name: kiss_icp
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+prefix: /home/shashank/mambaforge/envs/kiss_icp

@@ -1,0 +1,18 @@
+[submodule "third_party/vggt-omega"]
+	path = third_party/vggt-omega
+	url = https://github.com/facebookresearch/vggt-omega.git
+[submodule "third_party/regroup-hri"]
+	path = third_party/regroup-hri
+	url = https://github.com/UCSD-RHC-Lab/regroup-hri.git
+[submodule "third_party/lv-dot"]
+	path = third_party/lv-dot
+	url = https://github.com/zhefan-xu/lv-dot
+[submodule "third_party/ros2_leg_detector"]
+	path = third_party/ros2_leg_detector
+	url = https://github.com/mowito/ros2_leg_detector.git
+[submodule "third_party/sbpd-dataset-pipeline"]
+	path = third_party/sbpd-dataset-pipeline
+	url = git@github.com:social-navigation-group/sbpd-dataset-pipeline.git
+[submodule "third_party/ERASOR2"]
+	path = third_party/ERASOR2
+	url = git@github.com:raoshashank/ERASOR2.git

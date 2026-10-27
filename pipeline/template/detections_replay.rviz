@@ -1,0 +1,135 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Reference Frame: map
+      Plane Cell Count: 100
+      Cell Size: 1
+      Color: 160; 160; 164
+      Alpha: 0.3
+    - Class: rviz_default_plugins/PointCloud2
+      Name: SLAM map
+      Enabled: true
+      Topic:
+        Value: /slam_map
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Style: Points
+      Size (Pixels): 2
+      Color Transformer: AxisColor
+      Axis: Z
+      Use Fixed Frame: true
+      Autocompute Value Bounds: false
+      Min Value: -1.5
+      Max Value: 4
+      Alpha: 0.35
+      Decay Time: 0
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Live scan
+      Enabled: true
+      Topic:
+        Value: /rslidar_points
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+      Style: Points
+      Size (Pixels): 3
+      Color Transformer: FlatColor
+      Color: 120; 120; 120
+      Alpha: 0.5
+      Decay Time: 0
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Residual (not in map)
+      Enabled: true
+      Topic:
+        Value: /residual
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Style: Points
+      Size (Pixels): 4
+      Color Transformer: FlatColor
+      Color: 255; 230; 0
+      Alpha: 1
+      Decay Time: 0
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Detections (blue in FOV, red outside, green ped3d)
+      Enabled: true
+      Topic:
+        Value: /detections
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Fused persons (green verified, purple camera-only, orange lidar-only, grey unconfirmed)
+      Enabled: true
+      Topic:
+        Value: /fused_tracks
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+    - Class: rviz_default_plugins/Path
+      Name: SLAM path
+      Enabled: true
+      Topic:
+        Value: /slam_path
+        Depth: 1
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Line Style: Billboards
+      Line Width: 0.08
+      Color: 255; 200; 0
+      Alpha: 1
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Names: true
+      Show Arrows: false
+      Show Axes: true
+      Marker Scale: 1
+      Frames:
+        All Enabled: false
+        base_link:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 30; 30; 34
+    Fixed Frame: map
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/Measure
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Target Frame: base_link
+      Distance: 35
+      Pitch: 0.8
+      Yaw: 3.6
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+Window Geometry:
+  Width: 1600
+  Height: 950

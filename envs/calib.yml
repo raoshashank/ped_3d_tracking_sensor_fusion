@@ -1,0 +1,6 @@
+name: calib
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+prefix: /home/shashank/mambaforge/envs/calib

@@ -1,0 +1,134 @@
+services:
+  regroup_detector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: regroup-hri:latest
+
+    # ── GPU access ─────────────────────────────────────────────────────────────
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    # ── ROS 2 networking ───────────────────────────────────────────────────────
+    # host networking lets DDS discovery work without extra configuration.
+    # The node's published topic will be visible to any ros2 tool on the host.
+    network_mode: host
+    ipc: host
+    user: "${HOST_UID}:${HOST_GID}"
+
+    tty: true
+    stdin_open: true
+    
+    # ── Parameters (all optional — defaults match the node's own defaults) ─────
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - DEVICE=${DEVICE:-cuda}
+      # ROS domain — match whatever the Gazebo simulation uses (default 0)
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      # Match the host's RMW so messages flow between host and container
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/config/fastdds.xml
+      # Topic to subscribe to. Append /compressed for CompressedImage.
+      - IMAGE_TOPIC=/camera/color/image_raw
+
+      # torch device: cuda:0, cuda:1, cpu …
+      - DEVICE=cuda:0
+
+      # Model weights (relative to /opt/regroup, or absolute paths)
+      - YOLO_MODEL=yolo11x.pt
+      - REID_WEIGHTS=osnet_x0_25_msmt17.pt
+
+      # Detection / tracking params
+      # - MIN_CONFIDENCE=0.5
+      # - NMS_MAX_OVERLAP=0.5
+      # - MIN_DET_HEIGHT=0
+      # - MAX_COSINE_DIST=0.4
+      # - NN_BUDGET=100
+
+      # Group detection params
+      # - CIF=4
+      # - GP_DIST=20.0
+      # - H_RATIO=0.8
+      # - COST_METRIC=2       # 0=appearance 1=motion 2=both
+
+    # ── Volumes ────────────────────────────────────────────────────────────────
+    volumes:
+      # Mount source so edits to Python files are reflected without rebuilding.
+      - type: bind
+        source: ./regroup
+        target: /opt/regroup
+      - type: bind
+        source: ${BAGS_DIR:-./bags}
+        target: /bags
+        read_only: true
+      - type: bind
+        source: ./filtered
+        target: /filtered
+      # - type: bind
+      #   source: /mnt/nas/SocNavDatasets/SCAND/scand_spot
+      #   target: /scand_ros2_bags
+      #   read_only: true
+      # - type: bind
+      #   source: /media/dataset_access/scand_boxmotions
+      #   target: /scand_boxmotions
+      # - type: bind
+      #   source: /media/dataset_access/go2nus_boxmotions
+      #   target: /go2nus_boxmotions
+      # - type: bind
+      #   source: /media/dataset_access/gmu_boxmotions
+      #   target: /gmu_boxmotions
+        
+        
+    restart: unless-stopped
+
+  # ── Offline bag → annotated video ─────────────────────────────────────────
+  # Usage:
+  #   BAG_PATH=/data/mybag TOPIC=/camera/image_raw OUTPUT_VIDEO=/output/result.mp4 \
+  #       docker compose run --rm bag_replay
+  bag_replay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: regroup-hri:latest
+    command: ["bag_replay"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      # Long-form bind-mount syntax avoids docker-compose mistaking a path
+      # for a named volume when BAG_DIR / OUTPUT_DIR are relative paths.
+      # Mount source so edits to Python files are reflected without rebuilding.
+      - type: bind
+        source: ./regroup
+        target: /opt/regroup
+      - type: bind
+        source: ${BAG_DIR:-/tmp}
+        target: /data
+        read_only: true
+      - type: bind
+        source: ${OUTPUT_DIR:-/tmp}
+        target: /output
+    environment:
+      - BAG_PATH=${BAG_PATH:-/data/mybag}
+      - TOPIC=${TOPIC:-/camera/image_raw}
+      - OUTPUT_VIDEO=${OUTPUT_VIDEO:-/output/result.mp4}
+      - DEVICE=${DEVICE:-cuda:0}
+      - YOLO_MODEL=yolo11x.pt
+      - REID_WEIGHTS=osnet_x0_25_msmt17.pt
+      # All other REGROUP params inherit their defaults from bag_replay.py
+      # Uncomment to override:
+      # - MIN_CONFIDENCE=0.5
+      # - GP_DIST=20.0
+      # - COST_METRIC=2

@@ -1,0 +1,5 @@
+go2nus: 0.35
+miraikan: 0.0 #odom child frame is already on the ground
+keio: 0.0 #odom child frame is already on the ground
+gmu: 0.178
+scand_spot: 0.0 #dunno

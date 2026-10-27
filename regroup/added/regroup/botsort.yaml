@@ -1,0 +1,19 @@
+tracker_type: botsort
+track_high_thresh: 0.25       # min confidence for primary association
+track_low_thresh: 0.1         # min confidence for secondary association (rescued detections)
+new_track_thresh: 0.25        # min confidence to initialise a new track
+track_buffer: 30              # frames to keep a track alive after last detection
+match_thresh: 0.8             # IoU threshold for data association
+fuse_score: True              # fuse detection confidence into IoU distance
+
+# Camera motion compensation — use sparseOptFlow for scenes with visible background;
+# switch to 'ecc' for smoother but slower compensation.
+# In very crowded scenes (few background pixels) both methods degrade;
+# prefer odometry-based CMC at the group-tracker level instead.
+gmc_method: sparseOptFlow
+
+# ReID (disabled — person appearance is handled downstream by the group tracker)
+with_reid: True
+proximity_thresh: 0.5
+appearance_thresh: 0.8
+model: auto

@@ -1,0 +1,13 @@
+name: erasor2
+channels:
+  - conda-forge
+dependencies:
+  - hdbscan[version='>=0.8.28']
+  - matplotlib[version='>=3.3.0']
+  - numpy[version='>=1.18.0']
+  - pip
+  - python[version='>=3.8,<3.13']
+  - scikit-learn[version='>=0.24.0']
+  - tabulate[version='>=0.8.9']
+  - tqdm[version='>=4.62.0']
+prefix: /home/shashank/mambaforge/envs/erasor2

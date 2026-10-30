@@ -1,6 +1,6 @@
 """Fit the per-dataset VGGT-Omega pedestrian depth correction from processed ped3d results.
 
-    /home/shashank/mambaforge/envs/calib/bin/python fit_vggt_correction.py [--dataset go2nus ...]
+    $P3D_CONDA_ENVS/calib/bin/python fit_vggt_correction.py [--dataset go2nus ...]
 
 For each dataset, pairs (raw VGGT depth, independent lidar depth) of pedestrian instances with
 >= GOOD_LIDAR_PTS lidar points and lidar depth < 12 m are binned by VGGT depth (1-10 m); the

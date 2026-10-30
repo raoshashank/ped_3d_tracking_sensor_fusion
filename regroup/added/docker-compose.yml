@@ -77,13 +77,13 @@ services:
       #   target: /scand_ros2_bags
       #   read_only: true
       # - type: bind
-      #   source: /media/dataset_access/scand_boxmotions
+      #   source: /path/to/scand_boxmotions
       #   target: /scand_boxmotions
       # - type: bind
-      #   source: /media/dataset_access/go2nus_boxmotions
+      #   source: /path/to/go2nus_boxmotions
       #   target: /go2nus_boxmotions
       # - type: bind
-      #   source: /media/dataset_access/gmu_boxmotions
+      #   source: /path/to/gmu_boxmotions
       #   target: /gmu_boxmotions
         
         

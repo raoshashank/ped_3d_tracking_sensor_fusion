@@ -1,6 +1,6 @@
 # go2nus static maps with pedestrians removed (batch)
 
-`run_all.py` runs the utown_1 pipeline on every bag under `/media/dataset_access/go2nus_annotated/`:
+`run_all.py` runs the utown_1 pipeline on every bag under `$P3D_BAGS_GO2NUS/`:
 offline SLAM (KISS-ICP + GTSAM) -> Patchwork++/HDBSCAN labels -> ERASOR2 -> ped3d pedestrian masking
 -> ERASOR2 -> lidar-vs-map 360-deg detections -> masking with those too -> ERASOR2 (final map).
 Details of each step: `<bag>/slam_output/erasor2/README.md` of the utown_1 dev bag
@@ -38,15 +38,15 @@ python3 run_all.py --dataset miraikan            # tail -f logs/run_all_miraikan
 ```
 
 - **miraikan** (CaBot: Velodyne VLP-16, RealSense D455, `/odom`, `/cabot/imu/data`): bags come as zips in
-  `/media/dataset_access/ros2_bags_acme_reconstruction/miraikan/`, unzipped on demand to
-  `/media/dataset_access/miraikan_reconstruction/<bag>/` (outputs in `<bag>/slam_output/` as above).
+  `$P3D_ZIPS_MIRAIKAN/`, unzipped on demand to
+  `$P3D_BAGS_MIRAIKAN/<bag>/` (outputs in `<bag>/slam_output/` as above).
   One map per zip; consecutive splits of a session may start from different places, so joining them is
   left for later. 0-byte zips (incomplete download) are reported as `no bag` and picked up by a rerun.
   Differences from go2nus: no per-point lidar stamps (header stamp, no corrupt-scan span check);
   gravity from RANSAC floor planes in each scan (the IMU tilt is off by up to ~2 deg in some sessions)
   plus a soft prior that the floor stays at map z = 0 (VLP-16 ICP drifts in z: 11 cm over 10 m);
   lidar 0.553 m above the floor (measured from floor planes, 6 sessions); ped3d from
-  `/media/shashank/ssd2/ped3d/miraikan/<bag>.pkl`.
+  `$P3D_PED3D_OUT/miraikan/<bag>.pkl`.
 
 Not run in batch: the review-only group completion (people standing for the whole recording that
 neither sensor ever detected stay in the map; see the utown_1 README). Bags without a ped3d pickle

@@ -26,10 +26,10 @@ bag (.db3)
 
 ## 1. ped3d: camera-based pedestrian positions
 
-Code: `~/code/my_projects/socnav/notebooks/ped3d/` (`ped3d_lib.py`, `run_ped3d.py`, `run_all_ped3d.sh`,
-`relink.py`, `export_tracks.py`, `app.py` viewer). Environment: `~/mambaforge/envs/calib`.
+Code: `<repo>/ped3d/` (`ped3d_lib.py`, `run_ped3d.py`, `run_all_ped3d.sh`,
+`relink.py`, `export_tracks.py`, `app.py` viewer). Environment: `$P3D_CONDA_ENVS/calib`.
 
-Inputs per trajectory (`/media/shashank/T1/processed/go2nus/<traj>/`): camera frames (~4 Hz),
+Inputs per trajectory (`$P3D_PROCESSED/go2nus/<traj>/`): camera frames (~4 Hz),
 person tracks (boxes + ids, `regroup_tracks_sampled.pkl`), person masks, lidar scans, robot pose
 (`traj_data.pkl`, onboard odometry), per-trajectory camera extrinsics (camera pitch differs between
 recording sessions) and shared intrinsics; VGGT-Omega metric depth maps.
@@ -57,10 +57,10 @@ Per track:
    bridging, Hungarian assignment, ambiguity rejection).
 
 Outputs:
-- `/media/shashank/ssd2/ped3d/go2nus/<traj>_0.pkl`: per-frame detections (`pos_<source>`, 3D in
+- `$P3D_PED3D_OUT/go2nus/<traj>_0.pkl`: per-frame detections (`pos_<source>`, 3D in
   `base_link`), per-track `world[source]`, `fused` (x, y, vx, vy in the odometry frame), flags,
   variances; robot poses per frame
-- `/media/shashank/ssd2/ped3d/tracks_go2nus.pkl`: corpus export for training (per-track ragged
+- `$P3D_PED3D_OUT/tracks_go2nus.pkl`: corpus export for training (per-track ragged
   layout, re-linked `merged_tracks`)
 
 ## 2. Offline SLAM
@@ -83,7 +83,7 @@ Output: `erasor2/output_ped/ped3d_tracks_map.csv` (track, t, x, y).
 
 ## 4. Static map with pedestrians removed
 
-In `<bag>/slam_output/erasor2/` (env `erasor2`, ERASOR2 at `~/ERASOR2`):
+In `<bag>/slam_output/erasor2/` (env `erasor2`, ERASOR2 at `third_party/ERASOR2`):
 1. `export_scans.py`: scans + poses in ERASOR2's layout.
 2. `gen_labels.py`: Patchwork++ ground and HDBSCAN instance labels per scan.
 3. ERASOR2 on the raw scans → `output/` (reference map, no pedestrian information).
@@ -159,7 +159,7 @@ lidar / ped3d / both / filled, in_fov, range, top_h, label; 10 Hz), `fused_track
 ## Running
 
 - ped3d: `run_all_ped3d.sh` in the ped3d directory.
-- Everything else, all bags: `python3 /media/dataset_access/ped_3d_detection_pipeline/run_all.py`
+- Everything else, all bags: `python3 <repo>/pipeline/run_all.py`
   (resumable; per-bag logs in `logs/`, table in `summary.csv` of that directory).
 - Re-tracking only (maps unchanged): `retrack_all.py`; fusion only: `fuse_all.py` (same directory).
 - `fix_scan_stamps.py`: repairs scan timestamps broken by a stray point timestamp (older SLAM runs).
@@ -173,7 +173,7 @@ lidar / ped3d / both / filled, in_fov, range, top_h, label; 10 Hz), `fused_track
   tracks blue/red by FOV with ids, ped3d tracks as `p<id>`, fused persons as `P<id>` coloured by
   label).
 - Comparison with ros2_leg_detector (utown_1): `compare_replay.rviz` +
-  `slam_output/leg_detector/leg_detector_bag.launch.py` (workspace `~/leg_detector_ws`).
+  `slam_output/leg_detector/leg_detector_bag.launch.py` (workspace `$P3D_LEG_DETECTOR_WS`).
 - ped3d viewer: `app.py` (Streamlit) in the ped3d directory.
 
 ## Known limitations

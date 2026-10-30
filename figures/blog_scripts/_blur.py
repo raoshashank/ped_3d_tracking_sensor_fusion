@@ -8,9 +8,10 @@ blur; each detected person's box additionally gets a lighter blur as a fallback 
 Masks are cached per image key in _blur_cache/<key>.npz (packed bits + boxes), so reruns are cheap and
 scripts running in an env without ultralytics (e.g. the erasor2 env for figure 09) can use them as
 long as the cache was filled once with the calib env:
-    ~/mambaforge/envs/calib/bin/python _blur.py <image.jpg> <key>
+    $P3D_CONDA_ENVS/calib/bin/python _blur.py <image.jpg> <key>
 Usage in scripts: blur(rgb_uint8_array, key) -> blurred array (same shape).
 """
+import os
 import sys
 from pathlib import Path
 
@@ -18,7 +19,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 CACHE = Path(__file__).resolve().parent / "_blur_cache"
-MODEL = "/home/shashank/code/packages/regroup-hri/regroup/yolo11x-seg.pt"
+MODEL = os.environ.get("P3D_YOLO_SEG", "yolo11x-seg.pt")   # path to the weights, or a name ultralytics downloads
 CONF, IMGSZ = 0.1, 1920       # high res + low conf: catches people down to ~13 px tall
 DIL_FRAC = 0.003          # mask dilation, fraction of the image width (~2-3 px at 848)
 REL_BLUR = 0.035          # Gaussian radius = this x the person's box height (unidentifiable, not a blob)

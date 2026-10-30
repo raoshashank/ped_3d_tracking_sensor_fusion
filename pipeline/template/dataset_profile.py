@@ -12,6 +12,7 @@ Everything height-dependent is derived from lidar_height (lidar above the ground
   nominal ground when no Patchwork ground is near = lidar_height + 0.10 below the lidar (go2nus 0.48)
 """
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -29,7 +30,7 @@ GO2NUS = dict(
                                           # (level floors; VLP-16 ICP drifts in z). None: off
     base_T_lidar=[0.14543, 0.0, 0.13312, 0.0],   # x y z [m] yaw [rad]: SLAM base frame -> lidar (/tf_static)
     lidar_height=0.38,                    # lidar above the ground [m]
-    ped3d_pkl="/media/shashank/ssd2/ped3d/go2nus/{bag}_0.pkl",
+    ped3d_pkl="$P3D_PED3D_OUT/go2nus/{bag}_0.pkl",       # $P3D_* expanded from the environment
     camera_traj="{bag}_0",                # ped3d_lib trajectory name for the camera extrinsics
 )
 
@@ -50,7 +51,7 @@ MIRAIKAN = dict(
     # dynamic /tf chain 0.522). Mount roll/pitch vs the base < 0.25 deg: not modelled.
     base_T_lidar=[0.248, -0.003, 0.553, 0.002],
     lidar_height=0.553,
-    ped3d_pkl="/media/shashank/ssd2/ped3d/miraikan/{bag}.pkl",
+    ped3d_pkl="$P3D_PED3D_OUT/miraikan/{bag}.pkl",
     camera_traj="{bag}",
 )
 
@@ -87,7 +88,7 @@ def base_T_lidar(p):
 def write(slam_output, name, bag):
     """Write slam_output/dataset.json for profile `name` with the bag-specific paths filled in."""
     p = dict(PROFILES[name])
-    p["ped3d_pkl"] = p["ped3d_pkl"].format(bag=bag)
+    p["ped3d_pkl"] = os.path.expandvars(p["ped3d_pkl"]).format(bag=bag)   # needs P3D_PED3D_OUT
     p["camera_traj"] = p["camera_traj"].format(bag=bag)
     (Path(slam_output) / "dataset.json").write_text(json.dumps(p, indent=1))
     return p

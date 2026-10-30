@@ -2,7 +2,7 @@
 and save per-frame depth + confidence for comparison against lidar.
 
 Run with the `calib` env (torch 2.6 + cu124):
-    /home/shashank/mambaforge/envs/calib/bin/python run_vggt_omega.py --traj <traj_name>
+    $P3D_CONDA_ENVS/calib/bin/python run_vggt_omega.py --traj <traj_name>
 
 Frames are processed jointly in chunks (VGGT-Omega is multi-view): depth within a
 chunk shares one scene scale, but the scale is arbitrary (NOT metric) and differs
@@ -24,13 +24,16 @@ from huggingface_hub import hf_hub_download
 from vggt_omega.models import VGGTOmega
 from vggt_omega.utils.load_fn import load_and_preprocess_images
 from vggt_omega.utils.pose_enc import encoding_to_camera
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--traj', default='deck_1_without_overhead_2025-03-26_12-05-52_1_corrected_merged_0')
-    ap.add_argument('--data_root', default='/media/shashank/T1/processed/go2nus')
-    ap.add_argument('--out_root', default='/media/shashank/ssd2/processed_depth/go2nus')
+    ap.add_argument('--data_root', default=f"{p3d_env.P('P3D_PROCESSED')}/go2nus")
+    ap.add_argument('--out_root', default=f"{p3d_env.P('P3D_DEPTH')}/go2nus")
     ap.add_argument('--chunk', type=int, default=24, help='frames per joint forward pass')
     args = ap.parse_args()
 

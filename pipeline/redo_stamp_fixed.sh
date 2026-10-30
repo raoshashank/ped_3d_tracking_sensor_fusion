@@ -1,10 +1,11 @@
 #!/bin/bash
 # after fuse_all.py finishes: re-track + fuse the bags whose scan stamps were repaired (fix_scan_stamps.py)
-cd /media/dataset_access/ped_3d_detection_pipeline
+cd "$(dirname "$0")"
+[ -n "$P3D_BAGS_GO2NUS" ] || source ../config/paths.env
 # (waited for fuse_all.py in the first run)
-PY=/home/shashank/mambaforge/envs/erasor2/bin/python
+PY=$P3D_CONDA_ENVS/erasor2/bin/python
 for b in $(cat stamp_fixed_bags.txt); do
-  e=/media/dataset_access/go2nus_annotated/$b/slam_output/erasor2
+  e=$P3D_BAGS_GO2NUS/$b/slam_output/erasor2
   [ -f $e/output_ped/static_map_slam_frame.pcd ] || { echo "$b: no final map, skipped"; continue; }
   cp template/erasor2/lidar_tracker.py template/erasor2/lidar_ped_detect.py template/erasor2/fuse_tracks.py $e/
   cp template/replay_detections.py template/detections_replay.rviz $e/../

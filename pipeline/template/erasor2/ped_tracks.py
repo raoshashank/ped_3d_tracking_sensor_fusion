@@ -1,4 +1,4 @@
-"""ped3d pedestrian tracks (go2nus, /media/shashank/ssd2/ped3d) re-expressed in the SLAM `map` frame.
+"""ped3d pedestrian tracks (go2nus, $P3D_PED3D_OUT) re-expressed in the SLAM `map` frame.
 
 ped3d stores fused positions in the onboard-odometry world frame (traj_data), which drifts by ~1 m
 against the SLAM trajectory over this bag. So each fused position is taken back to the robot frame
@@ -18,7 +18,7 @@ import dataset_profile as DP  # noqa: E402
 HERE = Path(__file__).resolve().parent
 BAG_NAME = HERE.parent.parent.name
 PROF = DP.load(HERE)
-PED3D = Path(PROF["ped3d_pkl"].format(bag=BAG_NAME))   # go2nus: /media/shashank/ssd2/ped3d/go2nus/<bag>_0.pkl
+PED3D = Path(os.path.expandvars(PROF["ped3d_pkl"]).format(bag=BAG_NAME))   # go2nus: $P3D_PED3D_OUT/go2nus/<bag>_0.pkl
 EXTRAP = 0.3       # s: extend each track past its ends at constant velocity
 HOLD_STILL = np.inf  # s: a track slower than STILL_SPEED is held in place this long past its ends
 STILL_SPEED = 0.3    # m/s. The forward camera loses standing people once the robot has passed them,

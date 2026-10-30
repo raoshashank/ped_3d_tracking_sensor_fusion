@@ -9,7 +9,7 @@ Writes one row per instance to --out (npz):
     traj_idx, frame, gt, da, vggt, n_lidar, area   + trajs (list of names)
 
 Run with the calib env:
-    /home/shashank/mambaforge/envs/calib/bin/python ped_depth_accuracy.py
+    $P3D_CONDA_ENVS/calib/bin/python ped_depth_accuracy.py
 """
 import argparse
 import os
@@ -18,14 +18,17 @@ from multiprocessing import Pool
 
 import cv2
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 cv2.setNumThreads(1)
 
-DATA_ROOT = '/media/shashank/T1/processed/go2nus'
-DEPTH_ROOT = '/media/shashank/ssd2/processed_depth/go2nus'
-MASK_ROOT = '/media/shashank/ssd2/mask_dataset/go2nus'
-EXTRINSICS_ROOT = '/media/shashank/T1/processed/extrinsics/go2nus'
-INTRINSICS_FILE = '/media/shashank/T1/processed/intrinsics/go2nus/intrinsics.txt'
+DATA_ROOT = f"{p3d_env.P('P3D_PROCESSED')}/go2nus"
+DEPTH_ROOT = f"{p3d_env.P('P3D_DEPTH')}/go2nus"
+MASK_ROOT = f"{p3d_env.P('P3D_MASKS')}/go2nus"
+EXTRINSICS_ROOT = f"{p3d_env.P('P3D_PROCESSED')}/extrinsics/go2nus"
+INTRINSICS_FILE = f"{p3d_env.P('P3D_PROCESSED')}/intrinsics/go2nus/intrinsics.txt"
 IMG_W, IMG_H = 848, 480
 MIN_Z_CAM, MAX_RANGE = 0.3, 30.0
 MIN_AREA, MIN_LIDAR = 300, 10
@@ -96,7 +99,7 @@ def process_traj(arg):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--out', default='/media/shashank/ssd2/processed_depth/ped_depth_accuracy_go2nus.npz')
+    ap.add_argument('--out', default=f"{p3d_env.P('P3D_DEPTH')}/ped_depth_accuracy_go2nus.npz")
     ap.add_argument('--workers', type=int, default=12)
     args = ap.parse_args()
 

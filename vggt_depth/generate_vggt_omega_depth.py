@@ -18,7 +18,7 @@ Pipeline per trajectory:
      plus vggt_omega_scales.txt ("<i> <scale>" per line, -1 = fallback used).
 
 Run with the calib env:
-    /home/shashank/mambaforge/envs/calib/bin/python generate_vggt_omega_depth.py
+    $P3D_CONDA_ENVS/calib/bin/python generate_vggt_omega_depth.py
 Resumable: trajectories with a complete output folder are skipped.
 """
 import argparse
@@ -34,12 +34,15 @@ from PIL import Image
 
 from vggt_omega.models import VGGTOmega
 from vggt_omega.utils.load_fn import _balanced_target_shape
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-REGROUP_ROOT = '/media/shashank/ssd2/regroup_depth/regroup_detections/go2nus'
-PROCESSED_ROOT = '/media/shashank/T1/processed/go2nus'
-EXTRINSICS_ROOT = '/media/shashank/T1/processed/extrinsics/go2nus'
-INTRINSICS_FILE = '/media/shashank/T1/processed/intrinsics/go2nus/intrinsics.txt'
-OUT_ROOT = '/media/shashank/ssd2/processed_depth/go2nus'
+REGROUP_ROOT = f"{p3d_env.P('P3D_REGROUP')}/go2nus"
+PROCESSED_ROOT = f"{p3d_env.P('P3D_PROCESSED')}/go2nus"
+EXTRINSICS_ROOT = f"{p3d_env.P('P3D_PROCESSED')}/extrinsics/go2nus"
+INTRINSICS_FILE = f"{p3d_env.P('P3D_PROCESSED')}/intrinsics/go2nus/intrinsics.txt"
+OUT_ROOT = f"{p3d_env.P('P3D_DEPTH')}/go2nus"
 VIDEO_NAME = '_camera_camera_color_image_raw_compressed.avi'
 TS_NAME = '_camera_camera_color_image_raw_compressed.txt'
 

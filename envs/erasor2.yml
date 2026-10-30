@@ -10,4 +10,3 @@ dependencies:
   - scikit-learn[version='>=0.24.0']
   - tabulate[version='>=0.8.9']
   - tqdm[version='>=4.62.0']
-prefix: /home/shashank/mambaforge/envs/erasor2

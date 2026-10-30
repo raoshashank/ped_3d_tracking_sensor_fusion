@@ -24,7 +24,7 @@ sbpd-dataset-pipeline/robot_data_analysis/move_base_experiments/lidar_odometry_t
 sanity check.
 
 Run with the calib env:
-    /home/shashank/mambaforge/envs/calib/bin/python generate_vggt_omega_depth_multi.py --dataset keio
+    $P3D_CONDA_ENVS/calib/bin/python generate_vggt_omega_depth_multi.py --dataset keio
 Resumable: trajectories with a complete output folder are skipped.
 """
 import argparse
@@ -41,6 +41,9 @@ from PIL import Image
 
 from vggt_omega.models import VGGTOmega
 from vggt_omega.utils.load_fn import _balanced_target_shape
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 MIN_Z_CAM, MAX_RANGE = 0.3, 30.0
 MIN_LIDAR_PTS = 50
@@ -70,13 +73,14 @@ def _scand_video_for_traj(traj):
     return m.group(1) if m else traj
 
 
+RG, PR, DP = p3d_env.P('P3D_REGROUP'), p3d_env.P('P3D_PROCESSED'), p3d_env.P('P3D_DEPTH')
 DATASETS = {
     'gmu': dict(
-        regroup_root='/media/shashank/ssd2/regroup_depth/regroup_detections/gmu',
-        processed_root='/media/shashank/T1/processed/gmu',
-        extrinsics_root='/media/shashank/T1/processed/extrinsics/gmu',
-        intrinsics_file='/media/shashank/T1/processed/intrinsics/gmu/intrinsics.txt',
-        out_root='/media/shashank/ssd2/processed_depth/gmu',
+        regroup_root=f'{RG}/gmu',
+        processed_root=f'{PR}/gmu',
+        extrinsics_root=f'{PR}/extrinsics/gmu',
+        intrinsics_file=f'{PR}/intrinsics/gmu/intrinsics.txt',
+        out_root=f'{DP}/gmu',
         video_name='_zed2_zed_node_rgb_image_rect_color_compressed.avi',
         ts_name='_zed2_zed_node_rgb_image_rect_color_compressed.txt',
         img_w=640, img_h=360,
@@ -84,11 +88,11 @@ DATASETS = {
         video_for_traj=lambda t: t,
     ),
     'keio': dict(
-        regroup_root='/media/shashank/ssd2/regroup_depth/regroup_detections/keio',
-        processed_root='/media/shashank/T1/processed/keio',
-        extrinsics_root='/media/shashank/T1/processed/extrinsics/keio',
-        intrinsics_file='/media/shashank/T1/processed/intrinsics/keio/intrinsics.txt',
-        out_root='/media/shashank/ssd2/processed_depth/keio',
+        regroup_root=f'{RG}/keio',
+        processed_root=f'{PR}/keio',
+        extrinsics_root=f'{PR}/extrinsics/keio',
+        intrinsics_file=f'{PR}/intrinsics/keio/intrinsics.txt',
+        out_root=f'{DP}/keio',
         video_name='anonymized.avi',
         ts_name='_d455_rs1_color_image_raw_compressed_raw.txt',
         img_w=640, img_h=360,
@@ -96,11 +100,11 @@ DATASETS = {
         video_for_traj=lambda t: t,
     ),
     'scand_spot': dict(
-        regroup_root='/media/shashank/ssd2/regroup_depth/regroup_detections/scand_boxmotions/scand_spot',
-        processed_root='/media/shashank/T1/processed/scand_spot',
-        extrinsics_root='/media/shashank/T1/processed/extrinsics/scand_spot',
-        intrinsics_file='/media/shashank/T1/processed/intrinsics/scand_spot/intrinsics.txt',
-        out_root='/media/shashank/ssd2/processed_depth/scand_spot',
+        regroup_root=f'{RG}/scand_boxmotions/scand_spot',
+        processed_root=f'{PR}/scand_spot',
+        extrinsics_root=f'{PR}/extrinsics/scand_spot',
+        intrinsics_file=f'{PR}/intrinsics/scand_spot/intrinsics.txt',
+        out_root=f'{DP}/scand_spot',
         video_name='_image_raw_compressed.avi',
         ts_name='_image_raw_compressed.txt',
         img_w=1280, img_h=720,

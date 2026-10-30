@@ -1,6 +1,9 @@
 import pickle, sys, numpy as np, pandas as pd, cv2, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 B, O = sys.argv[1], sys.argv[2]; frames = [int(x) for x in sys.argv[3].split(",")]
-P=f"/media/shashank/T1/processed/go2nus/{B}_0"; E=f"/media/dataset_access/go2nus_annotated/{B}/slam_output/erasor2/output_ped"
+P=f"{p3d_env.P('P3D_PROCESSED')}/go2nus/{B}_0"; E=f"{p3d_env.P('P3D_BAGS_GO2NUS')}/{B}/slam_output/erasor2/output_ped"
 rg=pickle.load(open(f"{P}/regroup_tracks_sampled.pkl","rb")); ng=pickle.load(open(f"{O}/groups_sampled.pkl","rb"))
 ts=np.loadtxt(f"{P}/timestamps.txt"); F=pd.read_csv(f"{E}/fused_tracks.csv"); G=pd.read_csv(f"{O}/groups.csv")
 cols=plt.cm.tab10.colors

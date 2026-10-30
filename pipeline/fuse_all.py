@@ -4,9 +4,12 @@ replay script and RViz config. Writes output_ped/FUSED_V2 when done (skipped nex
 Usage: python3 fuse_all.py [--force]"""
 import shutil, subprocess, sys, time
 from pathlib import Path
-ROOT = Path("/media/dataset_access/go2nus_annotated")
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
+ROOT = Path(p3d_env.P("P3D_BAGS_GO2NUS"))
 T = Path(__file__).resolve().parent / "template"
-PY = "/home/shashank/mambaforge/envs/erasor2/bin/python"
+PY = p3d_env.py("erasor2")
 force = "--force" in sys.argv
 bags = sorted(d for d in ROOT.iterdir() if (d / "slam_output/erasor2/output_ped/lidar_tracks_smooth.csv").exists())
 for k, d in enumerate(bags, 1):

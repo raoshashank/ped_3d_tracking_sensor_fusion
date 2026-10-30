@@ -3,7 +3,7 @@ video available, e.g. uex). Same pipeline as generate_vggt_omega_depth_miraikan.
 chunked joint inference over consecutive frames, per-frame lidar scale (median lidar_z / vggt_z at
 projected lidar pixels), uint16 mm PNGs.
 
-    /home/shashank/mambaforge/envs/calib/bin/python generate_vggt_omega_depth_frames.py --dataset uex [--trajs ...]
+    $P3D_CONDA_ENVS/calib/bin/python generate_vggt_omega_depth_frames.py --dataset uex [--trajs ...]
 
 --scale-from lidar (default): per-frame median lidar_z / vggt_z (needs pcd + extrinsics)
 --scale-from odom: per-chunk scale from the VGGT camera path vs the odometry path (traj_data.pkl);

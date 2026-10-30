@@ -28,16 +28,19 @@ import pickle
 import cv2
 import numpy as np
 from scipy.spatial.transform import Rotation
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 cv2.setNumThreads(1)
 
 # ----------------------------------------------------------------------------- datasets
-PROCESSED_ROOT = '/media/shashank/T1/processed'
-DEPTH_ROOT = '/media/shashank/ssd2/processed_depth'
-# ssd2 is full; datasets processed later write their depth to the 3.4 TB drive (per-dataset override)
-DEPTH_ROOT_ALT = '/media/shashank/f6cd4c6b-0d44-43e7-9288-faac85e86149/ped3d_depth'
-MASK_ROOT = '/media/shashank/ssd2/mask_dataset'
-OUT_ROOT = '/media/shashank/ssd2/ped3d'
+PROCESSED_ROOT = p3d_env.P('P3D_PROCESSED')
+DEPTH_ROOT = p3d_env.P('P3D_DEPTH')
+# the first depth drive filled up; datasets processed later write their depth to a second root (per-dataset override)
+DEPTH_ROOT_ALT = p3d_env.P('P3D_DEPTH_ALT', DEPTH_ROOT)
+MASK_ROOT = p3d_env.P('P3D_MASKS')
+OUT_ROOT = p3d_env.P('P3D_PED3D_OUT')
 
 
 def _base_T_lidar(translation, rpy):

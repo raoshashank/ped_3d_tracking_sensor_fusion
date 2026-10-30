@@ -8,8 +8,11 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..', 'ped3d'))
 import ped3d_lib as L  # noqa: E402  (Traj loader, DATASETS, PROCESSED_ROOT, OUT_ROOT)
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-OUT_ROOT = '/media/shashank/ssd2/lvdot_eval'
+OUT_ROOT = p3d_env.P('P3D_LVDOT_OUT')
 YOLO_WEIGHTS = os.path.join(HERE, '..', 'lv-dot', 'onboard_detector', 'scripts', 'yolo_detector', 'weights', 'yolo11n.pt')
 
 # lidar height above the floor (bev_cache/lidar_mounts.yaml; scand_spot measured). The "ground" frame is the

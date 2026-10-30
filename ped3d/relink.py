@@ -1,7 +1,7 @@
 """Track re-linking in metric space (fix tracker ID churn) + validation. Used by export_tracks.py
 (merged_tracks / merged_id fields); run directly for the analysis report.
 
-    /home/shashank/mambaforge/envs/calib/bin/python relink.py [--dataset go2nus ...] [--n-val 150]
+    $P3D_CONDA_ENVS/calib/bin/python relink.py [--dataset go2nus ...] [--n-val 150]
 
 Input: the per-corpus training pickles (tracks_<dataset>.pkl, export_tracks format 2).
 

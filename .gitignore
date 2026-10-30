@@ -19,3 +19,5 @@ pipeline/groups_eval/sheets/
 *.rrd
 *.bin
 *.db3
+# machine-specific paths
+config/paths.env

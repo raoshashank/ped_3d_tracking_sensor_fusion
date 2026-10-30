@@ -15,10 +15,13 @@ import time
 import cv2
 import yaml
 from ultralytics import YOLO
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-PROCESSED_ROOT = '/media/shashank/T1/processed'
-REGROUP_DIR = '/home/shashank/code/packages/regroup-hri/regroup'
-OUT_ROOT = '/media/shashank/ssd2/ped3d/tracking'
+PROCESSED_ROOT = p3d_env.P('P3D_PROCESSED')
+REGROUP_DIR = _os.path.join(p3d_env.REPO, 'regroup', 'added', 'regroup')   # botsort.yaml; yolo weights by name (ultralytics downloads them)
+OUT_ROOT = _os.path.join(p3d_env.P('P3D_PED3D_OUT'), 'tracking')
 
 
 def make_tracker_cfg(reid, track_buffer, gmc, tag):
@@ -61,7 +64,7 @@ def main():
     ap.add_argument('--no-reid', action='store_true')
     ap.add_argument('--track-buffer', type=int, default=30)
     ap.add_argument('--gmc', default='sparseOptFlow')
-    ap.add_argument('--yolo', default=os.path.join(REGROUP_DIR, 'yolo11x.pt'))
+    ap.add_argument('--yolo', default='yolo11x.pt')
     ap.add_argument('--conf', type=float, default=0.25)
     ap.add_argument('--iou', type=float, default=0.7)
     ap.add_argument('--device', default=0)

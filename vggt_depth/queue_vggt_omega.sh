@@ -3,7 +3,8 @@
 # gmu, keio, scand_spot sequentially (generate_vggt_omega_depth_multi.py).
 # Each dataset logs to vggt_omega_<ds>.log; everything is resumable, so if
 # this queue dies just rerun it (finished trajectories are skipped).
-PY=/home/shashank/mambaforge/envs/calib/bin/python
+[ -n "$P3D_CONDA_ENVS" ] || source "$(dirname "$0")/../config/paths.env"
+PY=$P3D_CONDA_ENVS/calib/bin/python
 cd "$(dirname "$0")"
 
 echo "$(date) queue started; waiting for miraikan run to finish..."

@@ -9,7 +9,7 @@ Every person is blurred first (_blur.py, YOLO11x-seg) for privacy.
 Masks are left out (4 Hz only; they would lag). Light stabilisation of the gait shake is applied
 after drawing (ffmpeg vidstab), so overlays move with the image.
 Writes 01_inputs_camera.mp4 (1.5x real time) and 01_inputs_camera.gif.
-Run with ~/mambaforge/envs/calib/bin/python (needs rosbags + ped3d_lib)."""
+Run with $P3D_CONDA_ENVS/calib/bin/python (needs rosbags + ped3d_lib)."""
 import io
 import os
 import shutil
@@ -26,15 +26,18 @@ from rosbags.typesys import Stores, get_typestore
 
 from _blur import blur, precompute
 from _camera_common import FIG, traj
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-BAG = Path("/media/dataset_access/go2nus_annotated/utown_1_2025-03-07_12-41-18_10_corrected_merged")
+BAG = Path(p3d_env.P("P3D_BAGS_GO2NUS")) / "utown_1_2025-03-07_12-41-18_10_corrected_merged"
 SO = BAG / "slam_output"
 SCALE = 1.5                       # 848x480 -> 1272x720
 SPEED = 1.5
 STABILISE = True
 CMAP = matplotlib.colormaps["turbo"]
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-TMP = Path(os.environ.get("CLAUDE_JOB_DIR", tempfile.gettempdir())) / "tmp" / "anim01"
+TMP = Path(os.environ.get("P3D_SCRATCH", tempfile.gettempdir())) / "anim01"
 MAX_GAP = 0.6                     # s: don't interpolate a box across a longer detection gap
 
 G = {}

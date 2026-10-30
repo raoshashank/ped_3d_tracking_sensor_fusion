@@ -37,6 +37,7 @@ bag (.db3)
 | `regroup/` | the 2D front-end (YOLO + BoT-SORT + REGROUP grouping) that produces `regroup_tracks*.pkl`: patch against upstream `regroup-hri` plus the added scripts and Docker files (`added/`) | Docker |
 | `figures/` | paper figure (`paper_fig/fig_pipeline.py`) and the blog figure scripts it imports (`blog_scripts/`) | erasor2 / calib |
 | `envs/` | conda environments: `<env>.yml` (`conda env export --from-history`) and `<env>_pip_freeze.txt` | |
+| `p3d_env.py`, `config/paths.env.example` | machine-specific paths: every script reads `P3D_*` variables; copy the example to `config/paths.env` (git-ignored) and edit it | |
 | `docs/` | pipeline documentation (see above) | |
 | `third_party/` | submodules, see below | |
 
@@ -49,7 +50,7 @@ bag (.db3)
 | `third_party/regroup-hri` | github.com/UCSD-RHC-Lab/regroup-hri | `f692f50` | 2D person tracking + grouping | `regroup/regroup-hri_local_changes.patch` + files in `regroup/added/` |
 | `third_party/ros2_leg_detector` | github.com/mowito/ros2_leg_detector | `b4be35a` | baseline only | `baselines/leg_detector/ros2_leg_detector_humble.patch` |
 | `third_party/lv-dot` | github.com/zhefan-xu/lv-dot | `449bf2c` | baseline only | none |
-| `third_party/sbpd-dataset-pipeline` | github.com/social-navigation-group/sbpd-dataset-pipeline | `9ca27c8` (remote HEAD) | bag extraction that writes the per-trajectory frames, lidar scans and `traj_data.pkl` under `/media/shashank/T1/processed/<dataset>/` (`robot_data_analysis/data_sampling/process_bags_ros2.py`) | the workstation checkout `~/code/my_projects/sbpd-dataset-pipeline` is at `5b00be2` with uncommitted edits; commit and push there, then re-pin |
+| `third_party/sbpd-dataset-pipeline` | github.com/social-navigation-group/sbpd-dataset-pipeline | `9ca27c8` (remote HEAD) | bag extraction that writes the per-trajectory frames, lidar scans and `traj_data.pkl` under `$P3D_PROCESSED/<dataset>/` (`robot_data_analysis/data_sampling/process_bags_ros2.py`) | the workstation's local checkout is at `5b00be2` with uncommitted edits; commit and push there, then re-pin |
 
 Other dependencies are plain packages (see `envs/`): KISS-ICP 1.3.0, GTSAM, pypatchworkpp, hdbscan,
 open3d, rosbags, ultralytics, huggingface_hub, torch. ROS 2 Humble is needed only for the RViz replays
@@ -62,24 +63,27 @@ git clone --recurse-submodules <this repo>
 cd ped_3d_tracking_sensor_fusion
 ```
 
+Paths: copy `config/paths.env.example` to `config/paths.env` and fill in the data roots and the conda
+env directory for this machine (variables below). Scripts inside the repo load that file through
+`p3d_env.py`; `run_all.py` exports the variables to every step it runs, so the scripts it copies into
+`<bag>/slam_output/` need nothing else. To run one of those copied scripts by hand, `source
+config/paths.env` first.
+
 ERASOR2 submodule: `.gitmodules` points at `git@github.com:raoshashank/ERASOR2_minimal.git`, a mirror
-of upstream `d43d94f` (pushed from the workstation checkout `~/ERASOR2`, remote `fork`; `origin` there
-is upstream). Build it once:
+of upstream `d43d94f`. Build it once:
 
 ```bash
 git submodule update --init third_party/ERASOR2
 cd third_party/ERASOR2 && cmake -B build -S . && cmake --build build -j
 ```
 
-`pipeline/run_all.py` uses `$ERASOR2_BIN` if set, else `third_party/ERASOR2/build/run_erasor2`, else
-`~/ERASOR2/build/run_erasor2`.
+`pipeline/run_all.py` uses `$P3D_ERASOR2_BIN` if set, else `third_party/ERASOR2/build/run_erasor2`.
 
 Environments (`envs/`): `kiss_icp` (python 3.11: SLAM, scan export), `erasor2` (python 3.12: labels,
 masking, lidar detection/tracking, fusion, grouping), `calib` (python 3.10: ped3d, VGGT-Omega,
 `make_camera_model.py`; this env also picks up packages from `~/.local/lib/python3.10/site-packages`).
 `vggt_omega` is installed in `calib` as an editable package: `pip install -e third_party/vggt-omega`.
-The env python paths are hard-coded in `pipeline/run_all.py` (`ENV`) and in the ped3d shell scripts
-(`/home/shashank/mambaforge/envs/<env>/bin/python`).
+Interpreters are resolved as `$P3D_CONDA_ENVS/<env>/bin/python` (override one with `P3D_PY_<ENV>`, e.g. `P3D_PY_CALIB`).
 
 Apply the local patches when rebuilding a baseline or the 2D front-end:
 
@@ -88,23 +92,27 @@ git -C third_party/regroup-hri apply ../../regroup/regroup-hri_local_changes.pat
 git -C third_party/ros2_leg_detector apply ../../baselines/leg_detector/ros2_leg_detector_humble.patch
 ```
 
-## Data roots (hard-coded, workstation-specific)
+## Data roots (`config/paths.env`)
 
-| path | content | used by |
+| variable | content | used by |
 |---|---|---|
-| `/media/dataset_access/go2nus_annotated/<bag>/` | go2nus ROS 2 bags; outputs go to `<bag>/slam_output/` | `pipeline/*` |
-| `/media/dataset_access/ros2_bags_acme_reconstruction/miraikan/*.zip`, `/media/dataset_access/miraikan_reconstruction/<bag>/` | Miraikan bags (zips) and their unzipped working dirs | `pipeline/run_all.py --dataset miraikan` |
-| `/media/shashank/T1/processed/<dataset>/<traj>/` | extracted camera frames (~4 Hz), `timestamps.txt`, lidar scans, `traj_data.pkl`, `regroup_tracks_sampled.pkl`, masks; intrinsics/extrinsics under `T1/processed/{intrinsics,extrinsics}/` | `ped3d/`, `ped_groups.py`, `groups_eval/` |
-| `/media/shashank/ssd2/processed_depth/<dataset>/` | VGGT-Omega depth | `vggt_depth/`, `ped3d/` |
-| `/media/shashank/ssd2/regroup_depth/regroup_detections/<dataset>/` | 15 Hz REGROUP tracks | `ped_groups.py`, `groups_eval/` |
-| `/media/shashank/ssd2/ped3d/<dataset>/<traj>.pkl` | ped3d output pickles (input to `ped_tracks.py` / `fuse_tracks.py`) | `pipeline/template/dataset_profile.py` |
+| `P3D_BAGS_GO2NUS` | go2nus ROS 2 bags, one directory per bag; outputs go to `<bag>/slam_output/` | `pipeline/*` |
+| `P3D_ZIPS_MIRAIKAN`, `P3D_BAGS_MIRAIKAN` | Miraikan bags (zips) and their unzipped working dirs | `pipeline/run_all.py --dataset miraikan` |
+| `P3D_PROCESSED` | per dataset and trajectory: extracted camera frames (~4 Hz), `timestamps.txt`, lidar scans, `traj_data.pkl`, `regroup_tracks_sampled.pkl`, masks; `intrinsics/<dataset>/intrinsics.txt`, `extrinsics/<dataset>/<traj>/extrinsics.txt` | `ped3d/`, `vggt_depth/`, `ped_groups.py`, `groups_eval/` |
+| `P3D_DEPTH` (`P3D_DEPTH_ALT` for datasets stored on a second drive) | VGGT-Omega depth per dataset | `vggt_depth/`, `ped3d/` |
+| `P3D_MASKS` | person masks per dataset | `ped3d/`, `vggt_depth/` |
+| `P3D_REGROUP` | 15 Hz REGROUP tracks per dataset | `vggt_depth/`, `ped_groups.py`, `groups_eval/` |
+| `P3D_PED3D_OUT` | ped3d output pickles `<dataset>/<traj>.pkl` (input to `ped_tracks.py` / `fuse_tracks.py`), `tracks_<dataset>.pkl`, `extrinsics_est/`, `tracking/` | `ped3d/`, `pipeline/template/dataset_profile.py` |
+| `P3D_CONDA_ENVS` | directory holding the `kiss_icp`, `erasor2`, `calib` (and `pytorch3d` for LV-DOT) conda envs | everything |
+| `P3D_ERASOR2_BIN` (optional) | `run_erasor2` binary; default `third_party/ERASOR2/build/run_erasor2` | `pipeline/run_all.py` |
+| `P3D_FIG_OUT`, `P3D_LVDOT_OUT`, `P3D_UMICH_BAGS`, `P3D_YOLO_SEG`, `P3D_SCRATCH`, `P3D_LEG_DETECTOR_WS` | figure output dir, LV-DOT results, UMich split bags, YOLO-seg weights for the blur script, scratch dir, leg-detector ROS workspace | `figures/`, `baselines/`, `ped3d/extract_umich_extrinsics.py`, `groups_eval/run.py` |
 
 ## Running
 
 ```bash
-# 1. 2D tracks (REGROUP, Docker) and bag extraction (sbpd-dataset-pipeline) -> /media/shashank/T1/processed/<dataset>/
+# 1. 2D tracks (REGROUP, Docker) and bag extraction (sbpd-dataset-pipeline) -> $P3D_PROCESSED/<dataset>/
 # 2. VGGT-Omega depth
-~/mambaforge/envs/calib/bin/python vggt_depth/generate_vggt_omega_depth.py
+$P3D_CONDA_ENVS/calib/bin/python vggt_depth/generate_vggt_omega_depth.py
 # 3. camera-based 3D pedestrian estimation, all datasets (resumable)
 ped3d/run_all_ped3d.sh
 # 4. SLAM + static map + lidar tracking + fusion, all bags (resumable; DONE/FAILED markers per bag)
@@ -126,17 +134,15 @@ Per-bag outputs (`<bag>/slam_output/erasor2/output_ped/`): `static_map_slam_fram
 
 | repo path | copied from |
 |---|---|
-| `pipeline/` | `/media/dataset_access/ped_3d_detection_pipeline/` (without `logs/`, `backup_failed_slam/`, `groups_eval/sheets/`) |
-| `ped3d/`, `vggt_depth/`, `baselines/lvdot_eval/` | `~/code/my_projects/socnav/notebooks/` (untracked there) |
-| `eval/`, `baselines/leg_detector/`, `docs/erasor2_utown1_dev_notes.md` | `/media/dataset_access/go2nus_annotated/utown_1_2025-03-07_12-41-18_10_corrected_merged/slam_output/` (development bag) |
-| `figures/blog_scripts/` | `/media/dataset_access/ped3d_blog/scripts/` |
-| `regroup/` | `~/code/packages/regroup-hri` (diff + untracked files) |
+| `pipeline/` | the batch pipeline directory next to the go2nus bags (without `logs/`, `backup_failed_slam/`, `groups_eval/sheets/`) |
+| `ped3d/`, `vggt_depth/`, `baselines/lvdot_eval/` | the socnav notebooks folder (untracked there) |
+| `eval/`, `baselines/leg_detector/`, `docs/erasor2_utown1_dev_notes.md` | `slam_output/` of the development bag `utown_1_2025-03-07_12-41-18_10_corrected_merged` |
+| `figures/blog_scripts/` | the ped3d blog scripts |
+| `regroup/` | the local regroup-hri checkout (diff + untracked files) |
 
-The originals were left in place. Three paths were changed in the copies: `pipeline/run_all.py`
-(`ERASOR2_BIN` lookup), `pipeline/template/make_camera_model.py` (`PED3D_DIR`, default `ped3d/` of this
-repo), `figures/paper_fig/fig_pipeline.py` (`BLOG` relative to the repo). Everything else still
-carries the workstation paths listed above.
+The originals were left in place. All workstation paths in the copies were replaced by `P3D_*`
+variables (`p3d_env.py`, `config/paths.env`); the docs under `docs/` were written against the old
+layout and name the same variables where paths occurred.
 
-Not included: the Nav2 shadow-mode experiments (`/media/dataset_access/reconstruction_experiments/`)
-and the RL primitive-selection work (github.com/raoshashank/social_RL_scene_reconstruction), which
-consume the maps and tracks produced here.
+Not included: the Nav2 shadow-mode experiments and the RL primitive-selection work
+(github.com/raoshashank/social_RL_scene_reconstruction), which consume the maps and tracks produced here.

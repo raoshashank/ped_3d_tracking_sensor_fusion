@@ -16,11 +16,14 @@ import numpy as np
 import open3d as o3d
 from matplotlib.patches import Wedge
 from scipy.spatial.transform import Rotation as R
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 BAG = "utown_1_2025-03-07_12-41-18_10_corrected_merged"
-SO = Path("/media/dataset_access/go2nus_annotated") / BAG / "slam_output"
+SO = Path(p3d_env.P("P3D_BAGS_GO2NUS")) / BAG / "slam_output"
 E = SO / "erasor2"
-PED3D = Path("/media/shashank/ssd2/ped3d/go2nus") / f"{BAG}_0.pkl"
+PED3D = Path(p3d_env.P("P3D_PED3D_OUT")) / "go2nus" / f"{BAG}_0.pkl"
 FIG = Path(__file__).resolve().parent.parent / "figures"
 T_REL = 21.5          # seconds into the recording
 TAIL = 2.0            # s of history drawn behind each person

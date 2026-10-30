@@ -1,14 +1,14 @@
 # ERASOR2 dynamic-object removal on this bag
 
 Input: the offline SLAM outputs in `..` (`poses_rslidar_tum.txt`) + `/rslidar_points` from the bag.
-ERASOR2 source/binary: `~/ERASOR2` (`build/run_erasor2`, conda env `~/mambaforge/envs/erasor2`).
+ERASOR2 source/binary: `third_party/ERASOR2` (`build/run_erasor2`, conda env `$P3D_CONDA_ENVS/erasor2`).
 
 ## Re-run
 
 ```bash
-~/mambaforge/envs/kiss_icp/bin/python export_scans.py              # scans + KITTI poses -> data/Merged (only if SLAM changed)
-OMP_NUM_THREADS=1 ~/mambaforge/envs/erasor2/bin/python gen_labels.py --workers 8   # Patchwork++ ground + HDBSCAN instances
-nice -n 10 ~/ERASOR2/build/run_erasor2 go2_utown.yaml             # ~25 s
+$P3D_CONDA_ENVS/kiss_icp/bin/python export_scans.py              # scans + KITTI poses -> data/Merged (only if SLAM changed)
+OMP_NUM_THREADS=1 $P3D_CONDA_ENVS/erasor2/bin/python gen_labels.py --workers 8   # Patchwork++ ground + HDBSCAN instances
+nice -n 10 $P3D_ERASOR2_BIN go2_utown.yaml             # ~25 s
 ```
 
 Keep workers <= 8 on this machine (all-core load makes it crash).
@@ -31,20 +31,20 @@ nothing (0.2 % of the map vs 4.4 % with `-1.0`). Kept for comparison only.
 
 ## Pedestrian-aware variant (ped3d + ERASOR2) — recommended map
 
-Uses the ped3d tracks (`/media/shashank/ssd2/ped3d/go2nus/<bag>_0.pkl`, RGB-D + lidar fusion) plus
+Uses the ped3d tracks (`$P3D_PED3D_OUT/go2nus/<bag>_0.pkl`, RGB-D + lidar fusion) plus
 the lidar-vs-map detections below to remove pedestrians from every scan before ERASOR2, which then
 also sees the emptied space and cleans up what neither found.
 
 ```bash
-~/mambaforge/envs/erasor2/bin/python ped_mask.py                                  # ped3d only
-nice -n 10 ~/ERASOR2/build/run_erasor2 go2_utown_ped.yaml                          # map v1
-PYTHONPATH=. ~/mambaforge/envs/erasor2/bin/python lidar_ped_detect.py             # 360-deg detections vs map v1
+$P3D_CONDA_ENVS/erasor2/bin/python ped_mask.py                                  # ped3d only
+nice -n 10 $P3D_ERASOR2_BIN go2_utown_ped.yaml                          # map v1
+PYTHONPATH=. $P3D_CONDA_ENVS/erasor2/bin/python lidar_ped_detect.py             # 360-deg detections vs map v1
 cp output_ped/static_map_slam_frame.pcd /tmp/map_v1.pcd
-~/mambaforge/envs/erasor2/bin/python ped_mask.py --lidar-tracks --group-completion /tmp/map_v1.pcd
+$P3D_CONDA_ENVS/erasor2/bin/python ped_mask.py --lidar-tracks --group-completion /tmp/map_v1.pcd
 #   -> prints/writes output_ped/completion_candidates.csv; review with camera crops, then:
-~/mambaforge/envs/erasor2/bin/python ped_mask.py --lidar-tracks --group-completion /tmp/map_v1.pcd --accept 0
-nice -n 10 ~/ERASOR2/build/run_erasor2 go2_utown_ped.yaml                          # final map
-~/mambaforge/envs/erasor2/bin/python eval_ped.py; ~/mambaforge/envs/erasor2/bin/python recall_eval.py output/static_map_slam_frame.pcd output_ped/static_map_slam_frame.pcd
+$P3D_CONDA_ENVS/erasor2/bin/python ped_mask.py --lidar-tracks --group-completion /tmp/map_v1.pcd --accept 0
+nice -n 10 $P3D_ERASOR2_BIN go2_utown_ped.yaml                          # final map
+$P3D_CONDA_ENVS/erasor2/bin/python eval_ped.py; $P3D_CONDA_ENVS/erasor2/bin/python recall_eval.py output/static_map_slam_frame.pcd output_ped/static_map_slam_frame.pcd
 ```
 
 - `ped_tracks.py`: ped3d positions live in the onboard-odometry frame, which drifts ~0.85 m (median)
@@ -127,12 +127,12 @@ rviz2 -d detections_replay.rviz
 ## Comparison with ros2_leg_detector (mowito), same bag
 
 `../leg_detector/leg_detector_bag.launch.py` runs pointcloud_to_laserscan (shin-height slice of
-/rslidar_points) + detect_leg_clusters + joint_leg_tracker (workspace `~/leg_detector_ws`).
+/rslidar_points) + detect_leg_clusters + joint_leg_tracker (workspace `$P3D_LEG_DETECTOR_WS`).
 Visual side-by-side in one RViz (fixed frame `map`; the leg detector works in `odom`, the replay
 node's map->odom TF puts it on the map):
 
 ```bash
-# ROS 2 Humble + ~/leg_detector_ws sourced, from slam_output/
+# ROS 2 Humble + $P3D_LEG_DETECTOR_WS sourced, from slam_output/
 ros2 launch leg_detector/leg_detector_bag.launch.py
 python3 replay_detections.py
 rviz2 -d compare_replay.rviz          # adds /scan (cyan) + /visualization_marker (leg detector)
@@ -167,14 +167,14 @@ followed for >= 3 matches):
 | v2 final (coast 0.5 s, gap 1.5 s, gate 95 %, q 0.8) | 2149 | 4.0 s | 86.2 / 83.0 % | 0.41 | 305 | ~1000 |
 
 `PYTHONPATH=. python lidar_tracker.py --compare-v1 [--no-write] [--set MAX_COAST_S=0.5 ...]`.
-All bags: `/media/dataset_access/ped_3d_detection/media/dataset_access/ped_3d_detection_pipeline/retrack_all.py` (maps not rebuilt).
+All bags: `<repo>/pipeline/retrack_all.py` (maps not rebuilt).
 
 ## ped3d + lidar fusion (`fuse_tracks.py`)
 
 One track set per bag: `output_ped/fused_tracks.csv` (10 Hz, person ids, body-centre positions,
 source lidar / ped3d / both / filled, label camera_verified / camera_only / lidar_only /
 unconfirmed_in_fov) + `fused_track_members.csv`. Method in
-`/media/dataset_access/ped_3d_detection_pipeline/PEDESTRIAN_3D.md` section 6.
+`<repo>/pipeline/PEDESTRIAN_3D.md` section 6.
 
 Findings while building it (9 evaluation bags):
 - ped3d positions are body centres, lidar detections visible-surface centroids: ped3d sits

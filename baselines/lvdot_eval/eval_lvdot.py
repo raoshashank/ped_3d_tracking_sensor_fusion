@@ -1,12 +1,12 @@
 """Score the LV-DOT port against the ped3d pedestrian estimates on the sampled trajectories.
 
-    PYTHONNOUSERSITE=1 /home/shashank/mambaforge/envs/pytorch3d/bin/python eval_lvdot.py [--datasets ...] [--workers 8]
+    PYTHONNOUSERSITE=1 $P3D_CONDA_ENVS/pytorch3d/bin/python eval_lvdot.py [--datasets ...] [--workers 8]
 
 Reference per frame = ped3d instances (tracker box + fused lidar/VGGT position, base frame) within
 EVAL_RANGE. For each config (stock / tuned) and frame the port returns DBSCAN clusters, is_human
 boxes and size-constrained "dynamic" boxes; matching is greedy on xy distance <= MATCH_R.
 
-Writes /media/shashank/ssd2/lvdot_eval/results_<ds>.pkl with
+Writes $P3D_LVDOT_OUT/results_<ds>.pkl with
   refs   : one row per reference pedestrian (matched?, distance, 2D YOLO IOU, nearest cluster ...)
   frames : one row per frame (counts, timing)
   extras : one row per is_human box with no reference within 1 m (for inspection)

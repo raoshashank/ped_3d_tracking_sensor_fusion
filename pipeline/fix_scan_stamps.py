@@ -5,7 +5,10 @@ An outlier stamp is replaced by the mean of its neighbours. Prints the repaired 
 Usage: python3 fix_scan_stamps.py"""
 from pathlib import Path
 import numpy as np
-ROOT = Path("/media/dataset_access/go2nus_annotated")
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
+ROOT = Path(p3d_env.P("P3D_BAGS_GO2NUS"))
 FILES = ("poses_base_link_tum.txt", "poses_rslidar_tum.txt", "poses_base_link_kiss_only_tum.txt")
 for d in sorted(ROOT.iterdir()):
     o = d / "slam_output"

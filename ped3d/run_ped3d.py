@@ -1,8 +1,8 @@
 """Batch pedestrian 3D estimation (ped3d_lib) over a dataset.
 
-    /home/shashank/mambaforge/envs/calib/bin/python run_ped3d.py --dataset go2nus [--limit 50] [--workers 8]
+    $P3D_CONDA_ENVS/calib/bin/python run_ped3d.py --dataset go2nus [--limit 50] [--workers 8]
 
-Writes /media/shashank/ssd2/ped3d/<dataset>/<traj>.pkl per trajectory (skipped if present unless
+Writes $P3D_PED3D_OUT/<dataset>/<traj>.pkl per trajectory (skipped if present unless
 --force) and <dataset>/_metrics.csv with the per-trajectory self-consistency metrics.
 """
 import argparse

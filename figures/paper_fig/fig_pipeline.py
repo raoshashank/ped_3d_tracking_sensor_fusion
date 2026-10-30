@@ -28,9 +28,12 @@ import matplotlib.patches as patches  # noqa: E402
 import open3d as o3d  # noqa: E402
 from scipy.spatial import cKDTree  # noqa: E402
 from scipy.spatial.transform import Rotation as R  # noqa: E402
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 OUT = Path(__file__).resolve().parent
-BAG = Path("/media/dataset_access/go2nus_annotated/utown_1_2025-03-07_12-41-18_10_corrected_merged")
+BAG = Path(p3d_env.P("P3D_BAGS_GO2NUS")) / "utown_1_2025-03-07_12-41-18_10_corrected_merged"
 SO, E = BAG / "slam_output", BAG / "slam_output" / "erasor2"
 OP = E / "output_ped"
 GROUND_Z = -0.25            # map z of the ground for this bag (blog_common)

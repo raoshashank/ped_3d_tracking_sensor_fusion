@@ -36,6 +36,7 @@ Outputs (output_ped/):
                              regroup_tracks_sampled.pkl
 """
 import argparse
+import os
 import itertools
 import pickle
 from pathlib import Path
@@ -45,8 +46,8 @@ import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 BAG = HERE.parent.parent.name
-PROC = Path("/media/shashank/T1/processed/go2nus")          # ~4 Hz sampled frames (groups_sampled.pkl output)
-RGD = Path("/media/shashank/ssd2/regroup_depth/regroup_detections/go2nus")   # 15 Hz REGROUP (evidence)
+PROC = Path(os.environ["P3D_PROCESSED"]) / "go2nus"          # ~4 Hz sampled frames (groups_sampled.pkl output)
+RGD = Path(os.environ["P3D_REGROUP"]) / "go2nus"   # 15 Hz REGROUP (evidence)
 
 MAX_D = 3.0          # m, pairs farther apart give no evidence for 'together'
 D0, SD = 1.2, 0.4    # m, distance up to D0 is fully compatible with a group, then gaussian falloff

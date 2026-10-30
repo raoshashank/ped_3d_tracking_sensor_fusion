@@ -7,8 +7,11 @@ import numpy as np
 from scipy.spatial.transform import Rotation as R
 sys.path.insert(0, str(Path(__file__).resolve().parent / "template"))
 from run_slam import slam_qc  # noqa: E402
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-ROOT = Path("/media/dataset_access/go2nus_annotated")
+ROOT = Path(p3d_env.P("P3D_BAGS_GO2NUS"))
 n = flagged = 0
 for d in sorted(ROOT.iterdir()):
     o = d / "slam_output"

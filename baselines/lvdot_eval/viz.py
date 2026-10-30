@@ -1,6 +1,6 @@
 """Qualitative panels: camera image with YOLO / LV-DOT / ped3d boxes + bird's-eye view.
 
-    PYTHONNOUSERSITE=1 MPLBACKEND=Agg /home/shashank/mambaforge/envs/pytorch3d/bin/python viz.py --dataset go2nus --traj <name> --frames 0 40 80 [--cfg stock]
+    PYTHONNOUSERSITE=1 MPLBACKEND=Agg $P3D_CONDA_ENVS/pytorch3d/bin/python viz.py --dataset go2nus --traj <name> --frames 0 40 80 [--cfg stock]
 
 Image: blue = YOLO person boxes, green = LV-DOT is_human boxes projected as in filterLVBBoxes
 (thick = passes size constraint), red = ped3d tracker boxes. BEV: grey = cloud DBSCAN sees,

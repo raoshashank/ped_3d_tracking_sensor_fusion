@@ -3,9 +3,10 @@
 
 Datasets (--dataset, default go2nus): robot/sensor setup in template/dataset_profile.py, written per bag to
 slam_output/dataset.json.
-  go2nus    /media/dataset_access/go2nus_annotated/<bag>/
-  miraikan  /media/dataset_access/miraikan_reconstruction/<bag>/, unzipped on demand from
-            /media/dataset_access/ros2_bags_acme_reconstruction/miraikan/<bag>.zip (one map per zip)
+  go2nus    $P3D_BAGS_GO2NUS/<bag>/
+  miraikan  $P3D_BAGS_MIRAIKAN/<bag>/, unzipped on demand from
+            $P3D_ZIPS_MIRAIKAN/<bag>.zip (one map per zip)
+All machine paths come from P3D_* variables (config/paths.env, loaded by p3d_env.py and exported to every step).
 
 Per bag  <root>/<bag>/  ->  <root>/<bag>/slam_output/ :
   1. run_slam.py            KISS-ICP + GTSAM offline SLAM           (kiss_icp env)
@@ -34,26 +35,23 @@ import sys
 import time
 from pathlib import Path
 
-PIPE = Path(__file__).resolve().parent   # /media/dataset_access/ped_3d_detection_pipeline
+PIPE = Path(__file__).resolve().parent   # <repo>/pipeline
 TEMPLATE = PIPE / "template"
 sys.path.insert(0, str(TEMPLATE))
+sys.path.insert(0, str(PIPE.parent))
+import p3d_env  # noqa: E402  (P3D_* data roots from config/paths.env; exported to every subprocess)
 import dataset_profile as DP  # noqa: E402
 
 DATASETS = {
-    "go2nus": dict(root=Path("/media/dataset_access/go2nus_annotated"), zips=None, summary="summary.csv"),
-    "miraikan": dict(root=Path("/media/dataset_access/miraikan_reconstruction"),
-                     zips=Path("/media/dataset_access/ros2_bags_acme_reconstruction/miraikan"),
+    "go2nus": dict(root=Path(p3d_env.P("P3D_BAGS_GO2NUS")), zips=None, summary="summary.csv"),
+    "miraikan": dict(root=Path(p3d_env.P("P3D_BAGS_MIRAIKAN")),
+                     zips=Path(p3d_env.P("P3D_ZIPS_MIRAIKAN")),
                      summary="summary_miraikan.csv"),
 }
 DATASET = "go2nus"   # set by --dataset
 ROOT = DATASETS[DATASET]["root"]
-ENV = {"kiss": "/home/shashank/mambaforge/envs/kiss_icp/bin/python",
-       "erasor2": "/home/shashank/mambaforge/envs/erasor2/bin/python",
-       "calib": "/home/shashank/mambaforge/envs/calib/bin/python"}
-_ERASOR2_CANDIDATES = [PIPE.parent / "third_party/ERASOR2/build/run_erasor2",   # this repo's submodule build
-                       Path.home() / "ERASOR2/build/run_erasor2"]              # stand-alone checkout
-ERASOR2_BIN = os.environ.get("ERASOR2_BIN") or str(next((p for p in _ERASOR2_CANDIDATES if p.exists()),
-                                                        _ERASOR2_CANDIDATES[-1]))
+ENV = {"kiss": p3d_env.py("kiss_icp"), "erasor2": p3d_env.py("erasor2"), "calib": p3d_env.py("calib")}
+ERASOR2_BIN = p3d_env.P("P3D_ERASOR2_BIN", str(PIPE.parent / "third_party/ERASOR2/build/run_erasor2"))
 # this machine (i9-13900KF, Raptor Lake) crashes under all-core load: 16 threads, low priority
 WRAP = ["taskset", "-c", "0-15", "nice", "-n", "10"]
 MIN_SCANS = 30
@@ -68,7 +66,7 @@ class Bag:
         self.log = PIPE / "logs" / f"{self.name}.log"
         prof = DP.PROFILES[DATASET]
         self.prof = prof
-        self.pkl = Path(prof["ped3d_pkl"].format(bag=self.name))
+        self.pkl = Path(os.path.expandvars(prof["ped3d_pkl"]).format(bag=self.name))
         zips = DATASETS[DATASET]["zips"]
         self.zip = zips / f"{self.name}.zip" if zips else None
 

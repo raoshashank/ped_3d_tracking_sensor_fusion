@@ -1,7 +1,8 @@
 #!/bin/bash
 # after umich depth generation: estimate -> fit per-dataset VGGT correction (umich only, jackal has no
 # lidar) -> re-estimate -> heatmaps -> training pickles, for umich and scand_jackal
-PY=/home/shashank/mambaforge/envs/calib/bin/python
+[ -n "$P3D_CONDA_ENVS" ] || source "$(dirname "$0")/../config/paths.env"
+PY=$P3D_CONDA_ENVS/calib/bin/python
 cd "$(dirname "$0")"
 while pgrep -f "generate_vggt_omega_depth_frames.py --dataset umich" > /dev/null; do sleep 60; done
 echo "$(date) depth done: $(tail -1 ../vggt_omega_umich.log)"

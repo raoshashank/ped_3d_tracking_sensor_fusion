@@ -39,7 +39,7 @@ click==8.5.0
 comm==0.2.2
 ConfigArgParse==1.7
 contourpy==1.3.2
--e git+https://github.com/raoshashank/vlmsocnav.git@c99bff4d2ebb4f2e9bc46e8a890d25d9dbef56c2#egg=costmap_learning&subdirectory=training
+costmap-learning==0.1.0
 crashtest==0.4.1
 cryptography==49.0.0
 cycler==0.12.1
@@ -53,14 +53,14 @@ decorator==5.3.1
 defusedxml==0.7.1
 detection-visualizer==0.1.0
 diff-match-patch==20230430
--e git+ssh://git@github.com/real-stanford/diffusion_policy.git@5ba07ac6661db573af695b419a7947ecb704690f#egg=diffusion_policy
+diffusion_policy==0.0.0
 diskcache==5.6.3
 docstring_parser==0.18.0
 dpkt==1.9.8
 dr-spaam==1.2.0
 dropbox==12.0.2
 dulwich==1.2.6
--e git+ssh://git@github.com/lukemelas/EfficientNet-PyTorch.git@7e8b0d312162f335785fb5dcfa1df29a75a1783a#egg=efficientnet_pytorch
+efficientnet_pytorch==0.7.1
 einops==0.8.1
 envisage==7.0.4
 et_xmlfile==2.0.0
@@ -102,7 +102,7 @@ importlib_metadata==9.0.0
 importlib_resources==6.5.2
 installer==1.0.1
 instructor==1.15.4
-interaction-detection @ file:///home/shashank/sonas_ws/src/interaction_detection
+interaction-detection==0.0.0
 ipykernel==6.29.5
 ipympl==0.10.0
 ipython==8.23.0
@@ -122,11 +122,11 @@ jsonref==1.1.0
 jsonschema==4.20.0
 jsonschema-specifications==2023.12.1
 jupyter==1.1.1
+jupyter_client==8.6.2
 jupyter-console==6.6.3
+jupyter_core==5.7.2
 jupyter-events==0.10.0
 jupyter-lsp==2.2.5
-jupyter_client==8.6.2
-jupyter_core==5.7.2
 jupyter_server==2.14.2
 jupyter_server_terminals==0.5.3
 jupyterlab==4.2.5
@@ -182,7 +182,7 @@ openpyxl==3.1.5
 opentelemetry-api==1.45.1
 outcome==1.3.0.post0
 overrides==7.7.0
-packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1777103621/work
+packaging==26.2
 pandas==2.2.2
 pandocfilters==1.5.1
 parso==0.8.4
@@ -191,6 +191,7 @@ pbs-installer==2026.6.10
 pcl==0.0.0.post1
 pexpect==4.9.0
 pillow==11.3.0
+pip==26.2
 pkginfo==1.12.1.2
 platformdirs==4.10.0
 playwright==1.41.2
@@ -251,7 +252,7 @@ PyYAML==6.0.3
 pyzmq==26.2.0
 Qt.py==2.0.3
 RapidFuzz==3.14.5
-rclpy-message-converter @ file:///home/shashank/catkin_ws/src/rclpy_message_converter
+rclpy-message-converter==2.0.2
 referencing==0.32.0
 regex==2023.12.25
 requests==2.34.2
@@ -278,6 +279,7 @@ seaborn==0.13.2
 segments-ai==1.14.0
 selenium==4.32.0
 Send2Trash==1.8.3
+setuptools==83.0.0
 shapely==2.1.1
 shellingham==1.5.4
 shiboken6==6.10.2
@@ -285,7 +287,7 @@ shtab==1.7.2
 six==1.17.0
 smmap==5.0.1
 sniffio==1.3.0
--e git+ssh://git@github.com/raoshashank/SoCRATES.git@9330115a4da4775b257725955b9043ab6cb2f1e7#egg=socrates
+socrates==0.1.0
 sortedcontainers==2.4.0
 sounddevice==0.4.6
 soundfile==0.12.1
@@ -328,8 +330,8 @@ types-Pillow==10.2.0.20240822
 types-PySide6==6.10.1.1
 types-python-dateutil==2.9.0.20241003
 types-requests==2.32.4.20250611
-typing-inspection==0.4.2
 typing_extensions==4.15.0
+typing-inspection==0.4.2
 tzdata==2024.1
 u-msgpack-python==2.8.0
 ultralytics==8.3.168
@@ -338,10 +340,10 @@ uri-template==1.3.0
 urllib3==2.7.0
 utm==0.8.1
 uvicorn==0.54.0
-vcstool @ git+https://github.com/voshch/vcstool.git@91d7db8cd09055742588dc2e85c2d668d178e990
+vcstool==0.3.1
 velodyne-decoder==3.1.0
--e git+https://github.com/facebookresearch/vggt-omega.git@282ec70363edeff59424bf43731658092fba3d37#egg=vggt_omega
--e git+ssh://git@github.com/robodhruv/visualnav-transformer.git@1d6006e188ef3f72ed57e8a4da6eb527f745e278#egg=vint_train&subdirectory=train
+vggt-omega==0.0.1
+vint-train==0.1.0
 virtualenv==21.5.1
 vtk==9.4.2
 watchdog==6.0.0
@@ -350,6 +352,7 @@ webcolors==24.8.0
 websocket-client==1.8.0
 websockets==16.0
 Werkzeug==3.0.4
+wheel==0.47.0
 widgetsnbextension==4.0.13
 wsproto==1.2.0
 xvfbwrapper==0.2.13

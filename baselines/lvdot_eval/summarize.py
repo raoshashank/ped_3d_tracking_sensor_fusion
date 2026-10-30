@@ -1,6 +1,6 @@
 """Tables from results_<ds>.pkl.
 
-    PYTHONNOUSERSITE=1 /home/shashank/mambaforge/envs/pytorch3d/bin/python summarize.py [--datasets ...] > summary.md
+    PYTHONNOUSERSITE=1 $P3D_CONDA_ENVS/pytorch3d/bin/python summarize.py [--datasets ...] > summary.md
 """
 import argparse
 import os

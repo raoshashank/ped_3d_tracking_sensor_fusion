@@ -12,7 +12,7 @@ Per chunk (the 24-frame VGGT window; poses live in the chunk's own frame):
   3. robust average over all frames of all chunks with enough motion (>= 1 m path, not straight-line
      only for yaw: the camera yaw is well constrained by the heading, roll/pitch by the alignment of the
      planar path + the odom z=0 plane)
-Writes /media/shashank/ssd2/ped3d/extrinsics_est/<dataset>/<traj>/extrinsics.txt and a summary line
+Writes $P3D_PED3D_OUT/extrinsics_est/<dataset>/<traj>/extrinsics.txt and a summary line
 (camera height, pitch, yaw, spread across chunks) so the consistency of the estimate can be judged.
 """
 import argparse

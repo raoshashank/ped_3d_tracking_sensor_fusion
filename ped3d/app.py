@@ -1,7 +1,7 @@
 """Streamlit viewer for pedestrian 3D position estimates (ped3d_lib).
 
-    cd ~/code/my_projects/socnav/notebooks/ped3d
-    /home/shashank/mambaforge/envs/calib/bin/python -m streamlit run app.py
+    cd <repo>/ped3d
+    $P3D_CONDA_ENVS/calib/bin/python -m streamlit run app.py
 
 Left: camera frame with track boxes, person mask, projected lidar (coloured by depth) and the
 per-source depths; optional VGGT-Omega depth panel. Right: bird's-eye view (world/odom frame or

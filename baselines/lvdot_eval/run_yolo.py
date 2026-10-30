@@ -1,8 +1,8 @@
 """Run LV-DOT's YOLO11n person detector on the sampled trajectories.
 
-    PYTHONNOUSERSITE=1 /home/shashank/mambaforge/envs/pytorch3d/bin/python run_yolo.py [--datasets go2nus ...]
+    PYTHONNOUSERSITE=1 $P3D_CONDA_ENVS/pytorch3d/bin/python run_yolo.py [--datasets go2nus ...]
 
-Two variants per frame, saved to /media/shashank/ssd2/lvdot_eval/yolo/<ds>/<traj>.pkl as
+Two variants per frame, saved to $P3D_LVDOT_OUT/yolo/<ds>/<traj>.pkl as
 {'stock': {frame: (M,5) [x1,y1,x2,y2,conf]}, 'tuned': {...}}:
   stock : exactly yolov11_detector.py -- BGR image squashed to 352x352, fed as a raw tensor
           (no letterbox, no channel swap), half precision, default conf 0.25, class "person"

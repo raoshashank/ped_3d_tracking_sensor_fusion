@@ -10,8 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-sys.path.insert(0, os.environ.get("PED3D_DIR",   # ped3d/ of the ped_3d_tracking_sensor_fusion repo
-                                  "/home/shashank/code/my_projects/ped_3d_tracking_sensor_fusion/ped3d"))
+sys.path.insert(0, os.environ.get("PED3D_DIR") or os.path.join(os.environ["P3D_REPO"], "ped3d"))   # repo ped3d/ (P3D_REPO: p3d_env.py)
 import ped3d_lib as L  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))

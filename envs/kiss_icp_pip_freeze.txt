@@ -45,10 +45,11 @@ nbformat==5.11.1
 nest-asyncio==1.6.0
 numpy==2.4.6
 open3d==0.20.0
-packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1785888127/work
+packaging==26.3
 parso==0.8.7
 pexpect==4.9.0
 pillow==12.3.0
+pip==26.2.1
 platformdirs==4.11.13
 plotly==7.1.0
 pluggy==1.6.0
@@ -58,8 +59,8 @@ ptyprocess==0.7.0
 pure_eval==0.2.4
 pybullet==3.2.7
 pydantic==2.13.5
-pydantic-settings==2.15.0
 pydantic_core==2.46.5
+pydantic-settings==2.15.0
 Pygments==2.21.0
 pyparsing==3.3.3
 pyquaternion==0.9.9
@@ -74,17 +75,19 @@ rosbags==0.11.5
 rpds-py==2026.6.3
 ruamel.yaml==0.19.1
 scipy==1.17.1
+setuptools==84.0.0
 shellingham==1.5.4
 six==1.17.0
 stack-data==0.6.3
 tqdm==4.70.1
 traitlets==5.16.1
 typer==0.27.2
-typing-inspection==0.4.4
 typing_extensions==4.16.0
+typing-inspection==0.4.4
 urllib3==2.8.0
 wcwidth==0.9.1
 Werkzeug==3.1.8
+wheel==0.48.0
 widgetsnbextension==4.0.16
 zipp==4.1.0
 zstandard==0.25.0

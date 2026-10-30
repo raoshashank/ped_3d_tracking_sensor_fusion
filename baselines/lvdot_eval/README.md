@@ -7,16 +7,16 @@ the detection front end (lidar preprocessing, DBSCAN, box projection, YOLO fusio
 evaluation runs it offline on the 4 Hz processed frames. Tracking (30 Hz Kalman + point-velocity voting) is
 not ported.
 
-    PY="env PYTHONNOUSERSITE=1 /home/shashank/mambaforge/envs/pytorch3d/bin/python"
+    PY="env PYTHONNOUSERSITE=1 $P3D_CONDA_ENVS/pytorch3d/bin/python"
     $PY run_yolo.py            # LV-DOT's yolo11n person boxes (stock 352x352 BGR tensor + default 640 letterbox)
-    $PY eval_lvdot.py          # port vs ped3d, 65 sampled trajectories, 12k frames -> /media/shashank/ssd2/lvdot_eval/results_*.pkl
+    $PY eval_lvdot.py          # port vs ped3d, 65 sampled trajectories, 12k frames -> $P3D_LVDOT_OUT/results_*.pkl
     $PY summarize.py           # tables -> summary.md
     MPLBACKEND=Agg $PY viz.py --dataset go2nus --traj <name> --frames 83 --cfg tuned   # image + BEV panel
 
 Configs: `stock` = cfg/detector_param.yaml (Gaussian range downsampling sigma 6 m, DBSCAN radius
 sqrt(0.05) = 0.22 m / 10 pts); `tuned` = same algorithm, no downsampling, 15 m box, radius 0.30 m / 6 pts.
 
-## Result (details in /media/shashank/ssd2/lvdot_eval/summary.md)
+## Result (details in $P3D_LVDOT_OUT/summary.md)
 
 Recall of ped3d pedestrians within 10 m, 33.7k instances, 4 corpora:
 

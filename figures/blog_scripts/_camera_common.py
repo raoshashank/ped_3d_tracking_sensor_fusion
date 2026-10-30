@@ -1,5 +1,5 @@
 """Shared helpers for the camera-side (ped3d) blog figures 01-05.
-Run the figure scripts with ~/mambaforge/envs/calib/bin/python."""
+Run the figure scripts with $P3D_CONDA_ENVS/calib/bin/python."""
 import pickle
 import sys
 from pathlib import Path
@@ -8,15 +8,18 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-sys.path.insert(0, "/home/shashank/code/my_projects/socnav/notebooks/ped3d")
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "ped3d"))
 import ped3d_lib as L  # noqa: E402
 
 DATASET = "go2nus"
 TRAJ = "utown_1_2025-03-07_12-41-18_10_corrected_merged_0"
 FRAME = 34                      # camera frame used in figures 01 and 03 (t ~ 8.6 s)
-FIG = Path("/media/dataset_access/ped3d_blog/figures")
-PED3D_PKL = Path("/media/shashank/ssd2/ped3d/go2nus") / f"{TRAJ}.pkl"
+FIG = Path(p3d_env.P("P3D_FIG_OUT"))
+PED3D_PKL = Path(p3d_env.P("P3D_PED3D_OUT")) / "go2nus" / f"{TRAJ}.pkl"
 
 C = dict(ped3d="#2ca02c", lidar_in="#1f77b4", lidar_out="#d62728",
          lidar="#1f77b4", vggt="#ff7f0e", vggt_c="#e6ab02", vggt_a="#2ca02c", da="#9467bd")

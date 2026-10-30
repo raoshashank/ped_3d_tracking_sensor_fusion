@@ -2,7 +2,7 @@
 """Fuse ped3d (camera, FOV only) and lidar (360 deg) pedestrian tracks into one track set per bag.
 
 Inputs (SLAM map frame):
-  ped3d   /media/shashank/ssd2/ped3d/go2nus/<bag>_0.pkl, per-frame detections (frames[k]): 3D positions
+  ped3d   $P3D_PED3D_OUT/go2nus/<bag>_0.pkl, per-frame detections (frames[k]): 3D positions
           in base_link at camera time timestamps[k], placed in the map with the SLAM base_link pose
   lidar   output_ped/lidar_tracks_smooth.csv (smoothed, every scan) + lidar_tracks.csv (raw detections),
           moved from the visible-surface centroid to the body centre (BODY_PUSH along the ray), the

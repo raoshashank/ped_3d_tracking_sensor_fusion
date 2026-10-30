@@ -9,6 +9,9 @@ from multiprocessing import Pool
 import numpy as np
 
 from _camera_common import C, FIG, SRC_LABEL, plt
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 SRCS = ["vggt", "vggt_c", "vggt_a", "da"]
 
@@ -29,7 +32,7 @@ def one(path):
 
 
 if __name__ == "__main__":
-    files = sorted(glob.glob("/media/shashank/ssd2/ped3d/go2nus/*_0.pkl"))
+    files = sorted(glob.glob(f"{p3d_env.P('P3D_PED3D_OUT')}/go2nus/*_0.pkl"))
     with Pool(6) as p:
         rows = [r for rr in p.map(one, files, chunksize=8) for r in rr]
     a = np.array(rows)

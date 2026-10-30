@@ -1,9 +1,9 @@
 """Heatmaps of pedestrian positions around the robot per sub-dataset (location group).
 
-    /home/shashank/mambaforge/envs/calib/bin/python ped_heatmap.py --dataset go2nus [--dataset miraikan ...]
-    /home/shashank/mambaforge/envs/calib/bin/python ped_heatmap.py --all
+    $P3D_CONDA_ENVS/calib/bin/python ped_heatmap.py --dataset go2nus [--dataset miraikan ...]
+    $P3D_CONDA_ENVS/calib/bin/python ped_heatmap.py --all
 
-Uses the fused (VGGT + lidar, smoothed) estimates from /media/shashank/ssd2/ped3d/<dataset>/*.pkl at
+Uses the fused (VGGT + lidar, smoothed) estimates from $P3D_PED3D_OUT/<dataset>/*.pkl at
 detected frames, in the robot frame (x forward, y left). Colour = expected number of pedestrians per
 frame per m^2 (log scale), so groups with different numbers of trajectories are comparable.
 Writes <dataset>/_heatmap_<dataset>.png and _heatmap_<dataset>.npz.

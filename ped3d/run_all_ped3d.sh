@@ -1,6 +1,7 @@
 #!/bin/bash
 # process every dataset (resumable; FORCE=1 recomputes everything), then heatmaps + training pickles
-PY=/home/shashank/mambaforge/envs/calib/bin/python
+[ -n "$P3D_CONDA_ENVS" ] || source "$(dirname "$0")/../config/paths.env"
+PY=$P3D_CONDA_ENVS/calib/bin/python
 cd "$(dirname "$0")"
 EXTRA=""; [ "${FORCE:-0}" = "1" ] && EXTRA="--force"
 for ds in go2nus miraikan keio gmu scand_spot uex; do

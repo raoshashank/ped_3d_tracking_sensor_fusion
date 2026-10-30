@@ -12,12 +12,12 @@ stop_for_each_frame: false
 dataloader:
   run_traj_clustering: false
   dataset_name: "HeLiPR"
-  abs_data_dir: "/media/dataset_access/go2nus_annotated/utown_1_2025-03-07_12-41-18_10_corrected_merged/slam_output/erasor2/data"
+  abs_data_dir: "<bag>/slam_output/erasor2/data"        # filled in per bag by run_all.py (write_yamls)
   cloud_dir: ""
   cloud_format: ""
   pose_path: ""
   sequence: "Merged"
-  abs_save_dir: "/media/dataset_access/go2nus_annotated/utown_1_2025-03-07_12-41-18_10_corrected_merged/slam_output/erasor2/output"
+  abs_save_dir: "<bag>/slam_output/erasor2/output"
   instance_seg_method: "hdbscan"
   accum_interval: 2
   expansion_range: 0
@@ -82,4 +82,4 @@ extrinsic:
 rerun:
   enabled: true
   spawn: false
-  save_path: "/media/dataset_access/go2nus_annotated/utown_1_2025-03-07_12-41-18_10_corrected_merged/slam_output/erasor2/output/erasor2_run.rrd"
+  save_path: "<bag>/slam_output/erasor2/output/erasor2_run.rrd"

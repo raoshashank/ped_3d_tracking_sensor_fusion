@@ -11,7 +11,7 @@ during the recording.
 Images are stored rotated 90 deg clockwise (bag_processing/rotate_images.py), so the saved matrix is
 expressed in the rotated camera frame: X' = -Y, Y' = X, Z' = Z (matching ped3d_lib's umich K).
 
-Writes /media/shashank/ssd2/ped3d/extrinsics_est/umich/<traj>/extrinsics.txt (16 numbers).
+Writes $P3D_PED3D_OUT/extrinsics_est/umich/<traj>/extrinsics.txt (16 numbers).
 """
 import argparse
 import os
@@ -23,10 +23,13 @@ from rclpy.serialization import deserialize_message
 from rosbag2_py import ConverterOptions, SequentialReader, StorageFilter, StorageOptions
 from scipy.spatial.transform import Rotation
 from tf2_msgs.msg import TFMessage
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-BAG_ROOT = '/media/shashank/f6cd4c6b-0d44-43e7-9288-faac85e86149/umich_split_bags/all_bags'
-OUT_ROOT = '/media/shashank/ssd2/ped3d/extrinsics_est/umich'
-PROCESSED_ROOT = '/media/shashank/T1/processed/umich'
+BAG_ROOT = p3d_env.P('P3D_UMICH_BAGS')
+OUT_ROOT = _os.path.join(p3d_env.P('P3D_PED3D_OUT'), 'extrinsics_est', 'umich')
+PROCESSED_ROOT = _os.path.join(p3d_env.P('P3D_PROCESSED'), 'umich')
 BASE, CAM = 'base_link', 'camera_color_optical_frame'
 # image rotated 90 deg clockwise -> new camera axes X' = -Y, Y' = X, Z' = Z
 R_ROT = np.eye(4)

@@ -4,7 +4,7 @@
 0.15-0.45 m above ground (base_link z = -0.20..0.10; base_footprint is 0.35 m below base_link),
 i.e. shin/knee height, with the 0.33 deg angular resolution the shipped forest was trained on.
 
-Run (workspace ~/leg_detector_ws sourced), then:  ros2 bag play <bag_dir> --clock
+Run (workspace $P3D_LEG_DETECTOR_WS sourced), then:  ros2 bag play <bag_dir> --clock
 """
 import math
 

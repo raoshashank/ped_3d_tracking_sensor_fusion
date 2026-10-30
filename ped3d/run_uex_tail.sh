@@ -1,7 +1,8 @@
 #!/bin/bash
 # after run_uex_chain.sh: depth + estimates for the 17 trajectories without a per-trajectory extrinsics file
 # (static mount -> dataset-wide extrinsics), then refresh heatmap + export
-PY=/home/shashank/mambaforge/envs/calib/bin/python
+[ -n "$P3D_CONDA_ENVS" ] || source "$(dirname "$0")/../config/paths.env"
+PY=$P3D_CONDA_ENVS/calib/bin/python
 cd "$(dirname "$0")"
 until grep -q "all done" run_uex_chain.log; do sleep 30; done
 echo "$(date) == depth for remaining"; "$PY" ../generate_vggt_omega_depth_frames.py --dataset uex 2>&1 | grep -v Warning | grep -v "skip$" | tail -20

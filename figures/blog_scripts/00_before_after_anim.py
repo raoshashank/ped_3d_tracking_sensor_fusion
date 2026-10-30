@@ -31,13 +31,16 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Wedge
 from scipy.signal import savgol_filter
 from scipy.spatial.transform import Rotation as R
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
 # Other recordings (the extra videos before section 9): set BLOG_BAG, BLOG_NAME (output file stem),
 # BLOG_POSTER_T (s) and BLOG_PLACE (poster caption) in the environment.
 BAG = os.environ.get("BLOG_BAG", "utown_1_2025-03-07_12-41-18_10_corrected_merged")
 NAME = os.environ.get("BLOG_NAME", "00_before_after")
 PLACE = os.environ.get("BLOG_PLACE", "a walk across campus")
-SO = Path("/media/dataset_access/go2nus_annotated") / BAG / "slam_output"
+SO = Path(p3d_env.P("P3D_BAGS_GO2NUS")) / BAG / "slam_output"
 E = SO / "erasor2"
 sys.path.insert(0, str(E))
 from ped_tracks import load_tracks  # noqa: E402  (ped3d tracks in the SLAM frame, per timestamp)
@@ -190,7 +193,7 @@ def main():
     render(ps, FIG / f"{NAME}.png", dpi=120,
            suptitle=f"The same moment, {POSTER_T:.1f} s into {PLACE}")
     scans = list(range(len(tl)))
-    base = os.environ.get("CLAUDE_JOB_DIR")
+    base = os.environ.get("P3D_SCRATCH")
     tmp = Path(tempfile.mkdtemp(dir=(base + "/tmp") if base else None))
     with Pool(a.workers) as pool:
         for n, _ in enumerate(pool.imap_unordered(job, [(i, s, str(tmp)) for i, s in enumerate(scans)]), 1):

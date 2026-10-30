@@ -1,6 +1,7 @@
 #!/bin/bash
 # after the uex depth generation finishes: estimate -> fit uex VGGT correction -> re-estimate -> heatmap -> export
-PY=/home/shashank/mambaforge/envs/calib/bin/python
+[ -n "$P3D_CONDA_ENVS" ] || source "$(dirname "$0")/../config/paths.env"
+PY=$P3D_CONDA_ENVS/calib/bin/python
 cd "$(dirname "$0")"
 while pgrep -f "generate_vggt_omega_depth_frames.py --dataset uex" > /dev/null; do sleep 60; done
 echo "$(date) depth done: $(tail -1 ../vggt_omega_uex.log)"

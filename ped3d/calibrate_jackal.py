@@ -20,7 +20,7 @@ from scipy.spatial.transform import Rotation
 import ped3d_lib as L
 
 TRAJ = 'A_Jackal_AHG_Library_Thu_Oct_28_7_merged_0'
-PCD = f'/media/shashank/f6cd4c6b-0d44-43e7-9288-faac85e86149/ped3d_depth/lidar_check/scand_jackal/{TRAJ}/pcd'
+PCD = f'{L.DEPTH_ROOT_ALT}/lidar_check/scand_jackal/{TRAJ}/pcd'
 
 
 def load_frames(n_frames):

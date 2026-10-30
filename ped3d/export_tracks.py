@@ -1,9 +1,9 @@
 """Export pedestrian tracks + robot state of a whole corpus into ONE pickle for model training.
 
-    /home/shashank/mambaforge/envs/calib/bin/python export_tracks.py --dataset go2nus [--min-track-len 3]
-    /home/shashank/mambaforge/envs/calib/bin/python export_tracks.py --all
+    $P3D_CONDA_ENVS/calib/bin/python export_tracks.py --dataset go2nus [--min-track-len 3]
+    $P3D_CONDA_ENVS/calib/bin/python export_tracks.py --all
 
-Output: /media/shashank/ssd2/ped3d/tracks_<dataset>.pkl   (format_version 3, per-track layout)
+Output: $P3D_PED3D_OUT/tracks_<dataset>.pkl   (format_version 3, per-track layout)
 
     import ped3d_lib as L
     data = L.load_tracks('go2nus')

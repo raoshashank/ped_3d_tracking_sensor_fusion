@@ -1,8 +1,11 @@
 """Per-bag comparison REGROUP (15 Hz, image-space) vs 3D groups (ped_groups.py output dir)."""
 import pickle, sys, itertools, numpy as np, pandas as pd, json
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 B, O = sys.argv[1], sys.argv[2]
-R = f"/media/shashank/ssd2/regroup_depth/regroup_detections/go2nus/{B}_0"
-E = f"/media/dataset_access/go2nus_annotated/{B}/slam_output/erasor2/output_ped"
+R = f"{p3d_env.P('P3D_REGROUP')}/go2nus/{B}_0"
+E = f"{p3d_env.P('P3D_BAGS_GO2NUS')}/{B}/slam_output/erasor2/output_ped"
 rg = pickle.load(open(f"{R}/regroup_tracks.pkl", "rb"))
 ts = np.array([int(l.split()[1]) for l in open(f"{R}/_camera_camera_color_image_raw_compressed.txt")]) / 1e9
 F = pd.read_csv(f"{E}/fused_tracks.csv"); M = pd.read_csv(f"{E}/fused_track_members.csv"); M = M[M.kind == "ped3d"]

@@ -5,12 +5,15 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "..", "..")))  # repo root: p3d_env
+import p3d_env  # noqa: E402  (P3D_* data roots: config/paths.env, see config/paths.env.example)
 
-BAG = Path("/media/dataset_access/go2nus_annotated/utown_1_2025-03-07_12-41-18_10_corrected_merged")
+BAG = Path(p3d_env.P("P3D_BAGS_GO2NUS")) / "utown_1_2025-03-07_12-41-18_10_corrected_merged"
 S = BAG / "slam_output"
 E = S / "erasor2"
-PROC = Path("/media/shashank/T1/processed/go2nus") / (BAG.name + "_0")
-FIG = Path("/media/dataset_access/ped3d_blog/figures")
+PROC = Path(p3d_env.P("P3D_PROCESSED")) / "go2nus" / (BAG.name + "_0")
+FIG = Path(p3d_env.P("P3D_FIG_OUT"))
 GROUND_Z = -0.25          # map z of the ground (SLAM map frame: origin at base_link, 0.35 m above ground... lidar 0.13 above)
 C_PED3D, C_IN, C_OUT = "#2ca02c", "#1f77b4", "#d62728"
 MAP_GREY = "0.78"
